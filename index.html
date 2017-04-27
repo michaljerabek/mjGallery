@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gallery</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <link rel="stylesheet" href="src/css/mjGallery.css">
+
+    <style>
+
+        .list {
+            font-size: 0;
+
+            margin-bottom: 10px;
+
+            padding: 10px 10px;
+
+            background-color: #000;
+            list-style-type: none;
+
+            overflow: hidden;
+        }
+
+        .list ~ *:not(.mj-gallery) {
+/*            display: none;*/
+        }
+
+        .item {
+            float: left;
+
+            width: 10%;
+        }
+
+        @media (max-width: 767px) {
+            .item {
+                width: 20%;
+            }
+        }
+
+        .link {
+            position: relative;
+
+            padding: 5px;
+
+            display: block;
+        }
+
+        .link:hover:after {
+            content: "";
+
+            position: absolute;
+            top: 2px;
+            left: 2px;
+
+            box-sizing: border-box;
+            width: calc(100% - 4px);
+            height: calc(100% - 4px);
+
+            background-color: rgba(255, 255, 255, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .image {
+            width: 100%;
+        }
+
+        .overlay {
+            text-align: center;
+            font-size: 10px;
+
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            padding: 10px 7px;
+
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.5);
+
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .overlay h2 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .overlay p {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .preview {
+	        font-size: 0;
+            text-align: center;
+
+            margin: 0;
+
+            padding: 15px;
+            padding-bottom: 0;
+
+            background-color: #000;
+
+            display: block;
+        }
+
+        .preview img {
+            max-height: 25vh;
+            width: 100%;
+            object-fit: cover;
+            object-position: top center;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <script src="http://mjerabek.wz.cz/onScreenLog.js"></script>
+
+    <ul class="list">
+        <li class="item"><a class="link" href="dev/img1.jpg" data-mjg-srcset="dev/img1.jpg 1x, img1x2.jpg 2x"><img class="image" src="dev/thumb1.jpg" alt="Photo 1"></a></li>
+        <li class="item"><a class="link" href="dev/thumb2.jpg"><img class="image" src="dev/thumb2.jpg" alt="Photo 2"></a></li>
+        <li class="item"><a class="link" href="dev/img3.jpg"><img class="image" src="dev/thumb3.jpg" alt="Photo 3"></a></li>
+        <li class="item"><a class="link" href="dev/img4.jpg"><img class="image" src="dev/thumb4.jpg" alt="Photo 4"></a></li>
+        <li class="item"><a class="link" href="dev/img5.jpg"><img class="image" src="dev/thumb5.jpg" alt="Photo 5"></a></li>
+        <li class="item"><a class="link" href="dev/img6.jpg"><img class="image" src="dev/thumb6.jpg" alt="Photo 6"></a></li>
+        <li class="item"><a class="link" href="dev/img1.jpg"><img class="image" src="dev/thumb1.jpg" alt="Photo 7"></a></li>
+        <li class="item"><a class="link" href="dev/img2.jpg"><img class="image" src="dev/thumb2.jpg" alt="Photo 8"></a></li>
+        <li class="item"><a class="link" href="dev/img3.jpg"><img class="image" src="dev/thumb3.jpg" alt="Photo 9"></a></li>
+        <li class="item"><a class="link" href="dev/img4.jpg"><img class="image" src="dev/thumb4.jpg" alt="Photo 10"></a></li>
+    </ul>
+
+    <ul class="list">
+        <li class="item"><a class="link" href="dev/img6.jpg"><img class="image" src="dev/thumb6.jpg" alt="Photo 1"></a></li>
+        <li class="item"><a class="link" href="dev/img5.jpg"><img class="image" src="dev/thumb5.jpg" alt="Photo 2"></a></li>
+        <li class="item"><a class="link" href="dev/img4.jpg"><img class="image" src="dev/thumb4.jpg" alt="Photo 3"></a></li>
+        <li class="item"><a class="link" href="dev/img3.jpg"><img class="image" src="dev/thumb3.jpg" alt="Photo 4"></a></li>
+        <li class="item"><a class="link" href="dev/img2.jpg"><img class="image" src="dev/thumb2.jpg" alt="Photo 5"></a></li>
+        <li class="item"><a class="link" href="dev/img1.jpg"><img class="image" src="dev/thumb1.jpg" alt="Photo 6"></a></li>
+        <li class="item"><a class="link" href="dev/img6.jpg"><img class="image" src="dev/thumb6.jpg" alt="Photo 7"></a></li>
+        <li class="item"><a class="link" href="dev/img5.jpg"><img class="image" src="dev/thumb5.jpg" alt="Photo 8"></a></li>
+        <li class="item"><a class="link" href="dev/img4.jpg"><img class="image" src="dev/thumb4.jpg" alt="Photo 9"></a></li>
+        <li class="item"><a class="link" href="dev/img3.jpg"><img class="image" src="dev/thumb3.jpg" alt="Photo 10"></a></li>
+    </ul>
+
+    <ul class="list">
+        <li class="item"><a class="link" href="dev/img5.jpg"><img class="image" src="dev/thumb5.jpg" alt="Photo 1"></a></li>
+        <li class="item"><a class="link" href="dev/img2.jpg"><img class="image" src="dev/thumb2.jpg" alt="Photo 2"></a></li>
+        <li class="item"><a class="link" href="dev/img4.jpg"><img class="image" src="dev/thumb4.jpg" alt="Photo 3"></a></li>
+        <li class="item"><a class="link" href="dev/img6.jpg"><img class="image" src="dev/thumb6.jpg" alt="Photo 4"></a></li>
+        <li class="item"><a class="link" href="dev/img1.jpg"><img class="image" src="dev/thumb1.jpg" alt="Photo 5"></a></li>
+        <li class="item"><a class="link" href="dev/img3.jpg"><img class="image" src="dev/thumb3.jpg" alt="Photo 6"></a></li>
+        <li class="item"><a class="link" href="dev/img6.jpg"><img class="image" src="dev/thumb6.jpg" alt="Photo 7"></a></li>
+        <li class="item"><a class="link" href="dev/img2.jpg"><img class="image" src="dev/thumb2.jpg" alt="Photo 8"></a></li>
+        <li class="item"><a class="link" href="dev/img4.jpg"><img class="image" src="dev/thumb4.jpg" alt="Photo 9"></a></li>
+        <li class="item"><a class="link" href="dev/img1.jpg"><img class="image" src="dev/thumb1.jpg" alt="Photo 10"></a></li>
+    </ul>
+
+    <ul class="list">
+        <li class="item"><a class="link" href="dev/img3.jpg"><img class="image" src="dev/thumb3.jpg" alt="Photo 3"></a></li>
+        <li class="item"><a class="link" href="dev/img4.jpg"><img class="image" src="dev/thumb4.jpg" alt="Photo 9"></a></li>
+        <li class="item"><a class="link" href="dev/img1.jpg"><img class="image" src="dev/thumb1.jpg" alt="Photo 10"></a></li>
+    </ul>
+
+    <ul class="list">
+        <li class="item"><a class="link" href="dev/img5.jpg"><img class="image" src="dev/thumb5.jpg" alt="Photo 6"></a></li>
+        <li class="item"><a class="link" href="dev/img6.jpg"><img class="image" src="dev/thumb6.jpg" alt="Photo 7"></a></li>
+    </ul>
+
+    <ul class="list">
+        <li class="item"><a class="link" href="dev/img1.jpg"><img class="image" src="dev/thumb1.jpg" alt="Photo 10"></a></li>
+    </ul>
+
+    <hr>
+
+    <button class="btn" data-mjg-src="http://lorempixel.com/1920/1080/transport/5/" data-mjg-title="">Lorempixel</button>
+    |
+    <button class="button" data-mjg-src="http://lorempixel.com/1920/1080/city/1/" data-mjg-description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto expedita hic a nostrum obcaecati cupiditate optio, ad temporibus eaque! Magni?">Lorempixel 1</button>
+    <button class="button" data-mjg-src="http://lorempixel.com/1920/1080/city/2/" title="Lorempixel 2">Lorempixel 2</button>
+    <button class="button" data-mjg-src="http://lorempixel.com/1920/1080/city/3/" data-mjg-description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste, possimus, recusandae voluptatum, distinctio esse accusantium nostrum ipsa aliquam quam quaerat quae nemo nisi. Deleniti delectus placeat recusandae doloremque sapiente magnam, excepturi laboriosam, iusto voluptates tempore." data-mjg-title="Lorempixel 3">Lorempixel 3</button>
+
+    <hr>
+
+    <ul class="list list-with-overlay">
+        <li class="item">
+            <a class="link" href="dev/img3.jpg">
+                <div class="overlay">
+                    <h2>Lorem ipsum dolor.</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos, ab!</p>
+                </div>
+                <img class="image" src="dev/thumb3.jpg" alt="Photo 3">
+            </a>
+        </li>
+        <li class="item">
+            <a class="link" href="dev/img4.jpg">
+                <div class="overlay">
+                    <h2>Lorem ipsum dolor.</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae, unde reprehenderit delectus doloribus optio aliquid?</p>
+                </div>
+                <img class="image" src="dev/thumb4.jpg" alt="Photo 9">
+            </a>
+        </li>
+        <li class="item">
+            <a class="link" href="dev/img1.jpg">
+                <div class="overlay">
+                    <h2>Lorem ipsum dolor sit amet, consectetur.</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus, in.</p>
+                </div>
+                <img class="image" src="dev/thumb1.jpg" alt="Photo 10">
+            </a>
+        </li>
+    </ul>
+
+    <a class="preview" data-mjg-selector=".list-with-preview:eq(0) .link" data-mjg-open=".list-with-preview:eq(0) .item:eq(0) .link" href="">
+        <img src="dev/img5.jpg" alt="">
+    </a>
+
+    <ul class="list list-with-preview">
+        <li class="item"><a class="link" href="dev/img5.jpg"><img class="image" src="dev/thumb5.jpg" alt="Photo 1"></a></li>
+        <li class="item"><a class="link" href="dev/img2.jpg"><img class="image" src="dev/thumb2.jpg" alt="Photo 2"></a></li>
+        <li class="item"><a class="link" href="dev/img4.jpg"><img class="image" src="dev/thumb4.jpg" alt="Photo 3"></a></li>
+        <li class="item"><a class="link" href="dev/img6.jpg"><img class="image" src="dev/thumb6.jpg" alt="Photo 4"></a></li>
+        <li class="item"><a class="link" href="dev/img1.jpg"><img class="image" src="dev/thumb1.jpg" alt="Photo 5"></a></li>
+        <li class="item"><a class="link" href="dev/img3.jpg"><img class="image" src="dev/thumb3.jpg" alt="Photo 6"></a></li>
+        <li class="item"><a class="link" href="dev/img6.jpg"><img class="image" src="dev/thumb6.jpg" alt="Photo 7"></a></li>
+        <li class="item"><a class="link" href="dev/img2.jpg"><img class="image" src="dev/thumb2.jpg" alt="Photo 8"></a></li>
+        <li class="item"><a class="link" href="dev/img4.jpg"><img class="image" src="dev/thumb4.jpg" alt="Photo 9"></a></li>
+        <li class="item"><a class="link" href="dev/img1.jpg"><img class="image" src="dev/thumb1.jpg" alt="Photo 10"></a></li>
+    </ul>
+
+    <script>
+
+        $(function () {
+
+            $(".list-with-preview:eq(0) .link").on("click", function (event) {
+
+                var $p = $(".preview:eq(0)");
+
+                $p.find("img").attr("src", this.href);
+
+                $p.attr("data-mjg-open", ".list-with-preview:eq(0) .item:eq(" + $(this).closest(".item").index() + ") .link");
+
+                return false;
+            });
+
+        });
+
+    </script>
+
+    <a class="preview" data-mjg-selector=".list-with-preview:eq(1) .link" href="dev/img5.jpg">
+        <img src="dev/img5.jpg" alt="">
+    </a>
+
+    <ul class="list list-with-preview">
+        <li class="item"><a class="link" href="dev/img5.jpg"><img class="image" src="dev/thumb5.jpg" alt="Photo 1"></a></li>
+        <li class="item"><a class="link" href="dev/img2.jpg"><img class="image" src="dev/thumb2.jpg" alt="Photo 2"></a></li>
+        <li class="item"><a class="link" href="dev/img4.jpg"><img class="image" src="dev/thumb4.jpg" alt="Photo 3"></a></li>
+        <li class="item"><a class="link" href="dev/img6.jpg"><img class="image" src="dev/thumb6.jpg" alt="Photo 4"></a></li>
+        <li class="item"><a class="link" href="dev/img1.jpg"><img class="image" src="dev/thumb1.jpg" alt="Photo 5"></a></li>
+        <li class="item"><a class="link" href="dev/img3.jpg"><img class="image" src="dev/thumb3.jpg" alt="Photo 6"></a></li>
+        <li class="item"><a class="link" href="dev/img6.jpg"><img class="image" src="dev/thumb6.jpg" alt="Photo 7"></a></li>
+        <li class="item"><a class="link" href="dev/img2.jpg"><img class="image" src="dev/thumb2.jpg" alt="Photo 8"></a></li>
+        <li class="item"><a class="link" href="dev/img4.jpg"><img class="image" src="dev/thumb4.jpg" alt="Photo 9"></a></li>
+        <li class="item"><a class="link" href="dev/img1.jpg"><img class="image" src="dev/thumb1.jpg" alt="Photo 10"></a></li>
+    </ul>
+
+    <script>
+
+        $(function () {
+
+            $(".list-with-preview:eq(1) .link").on("click", function (event) {
+
+                var $p = $(".preview:eq(1)");
+
+                $p.find("img").attr("src", this.href);
+
+                $p.attr("href", this.href);
+
+                return false;
+            });
+
+        });
+
+    </script>
+
+    <button class="iframe" data-mjg-src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d248849.84916296514!2d77.6309395!3d12.9539974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1410805729331">Google Map</button>
+    <button class="iframe" data-mjg-src="http://www.w3schools.com/" data-mjg-type="iframe">W3 Schools</button>
+
+    <hr>
+
+    <button class="video" data-mjg-src="https://www.youtube.com/embed/yEgmv-G1QRs">YouTube</button>
+    <button class="video" data-mjg-src="yEgmv-G1QRs" data-mjg-type="youtube">YouTube</button>
+    <button class="video" data-mjg-src="https://www.youtube.com/watch?v=yEgmv-G1QRs">YouTube</button>
+
+    <hr>
+
+    <button class="vimeo" data-mjg-src="https://vimeo.com/40983">Vimeo</button>
+    <button class="vimeo" data-mjg-src="40983" data-mjg-type="vimeo">Vimeo</button>
+    <button class="vimeo" data-mjg-autoplay="false" data-mjg-src="https://player.vimeo.com/video/40983">Vimeo</button>
+
+    <hr>
+
+    <button class="html" data-mjg-src="#html1" data-mjg-type="html" data-mjg-events="false">HTML</button>
+    <button class="html" data-mjg-src="#html2" data-mjg-type="html">HTML</button>
+    <button class="html" data-mjg-src="#html3" data-mjg-type="html">HTML</button>
+    <button class="html" data-mjg-src="#html4" data-mjg-type="html" data-mjg-method="clone">HTML W3 Schools</button>
+    <button class="html" data-mjg-src="#html5" data-mjg-type="html" data-mjg-method="append">HTML W3 Schools</button>
+    <button class="html" data-mjg-events="all">HTML GoogleMap</button>
+    <button class="html" data-mjg-src="#html6" data-mjg-type="html">Box</button>
+
+    <div id="html1" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi rem quidem, consequatur est neque qui ad ut dolor vel earum.</p>
+    </div>
+    <div id="html2" style="display:none">
+        <h2 style="margin-top: 0">Lorem ipsum dolor sit amet.</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab expedita architecto qui voluptas, repellat et.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab expedita architecto qui voluptas, repellat et.</p>
+        <input type="text">
+    </div>
+
+    <script id="html3" type="text/html">
+        <div style="display:none;">
+            <h2 style="margin-top: 0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ex, ea?</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, veniam similique vero ea id nulla soluta! Amet odio inventore, iure ab, ex ratione, deserunt aliquid delectus doloribus temporibus corporis sunt?</p>
+            <img src="dev/img5.jpg" alt="">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, veniam similique vero ea id nulla soluta! Amet odio inventore, iure ab, ex ratione, deserunt aliquid delectus doloribus temporibus corporis sunt?</p>
+        </div>
+        <input type="text">
+    </script>
+
+    <div id="html6" ontouchstart="" data-mjg-scrollable="true" style="overflow:auto; max-height: 85vh; display: none; padding: 40px; background: white; color: black; max-width: 800px; position: relative;">
+        <h2>Lorem ipsum dolor sit amet.</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi rem quidem, consequatur est neque qui ad ut dolor vel earum.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa nam quos, omnis nihil provident magnam quisquam illum velit ipsum ratione laudantium laboriosam autem, similique aliquid, dignissimos totam ut facilis. Ea, molestias nam illum, minima repudiandae cumque distinctio adipisci accusantium magnam odit iusto qui vero similique, perferendis ut reiciendis beatae quo fugiat velit numquam esse pariatur nemo quos soluta consequatur! Laboriosam error tenetur neque cupiditate facere quaerat veritatis laudantium eius alias, eos hic, molestias, repellendus natus?</p>
+        <h3>Lorem ipsum dolor sit amet.</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi rem quidem, consequatur est neque qui ad ut dolor vel earum.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde laudantium excepturi nisi magnam ea. Explicabo, suscipit aperiam vitae enim ad non tempora necessitatibus aliquid. Ducimus suscipit neque distinctio, voluptas sapiente expedita. Maxime sint provident quod, aspernatur, nobis nulla labore ea ullam, ex commodi, corporis quaerat perferendis enim assumenda dolore repellendus.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi rem quidem, consequatur est neque qui ad ut dolor vel earum.</p>
+        <h3>Lorem ipsum dolor sit amet.</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam officia voluptate facere atque possimus vitae est magnam laboriosam saepe sequi.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi rem quidem, consequatur est neque qui ad ut dolor vel earum.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi maiores ipsa magnam atque qui, fugiat magni illum, consequuntur, adipisci eius laborum, neque quis? Eum, id assumenda vitae quibusdam obcaecati sint fuga animi quod voluptatem dolorum rem architecto delectus nam explicabo quaerat cum, enim voluptatibus nulla, nesciunt officiis fugit soluta numquam? Obcaecati adipisci delectus rem voluptates esse, repudiandae quos atque a.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum animi nostrum quaerat fuga alias id rem commodi ipsa explicabo nulla, aperiam totam iste, harum cum veniam ea. Saepe, aspernatur illum voluptatem nemo ipsum hic nesciunt dolores laborum deleniti dolorum mollitia!</p>
+        <button data-mjg-action="close" style="position: absolute; top: 10px; right: 10px">&times;</button>
+    </div>
+
+    <iframe src="http://www.w3schools.com/" frameborder="0" id="html4" style="display:none;width: 100%; height: 100%; position: absolute; top: 0; left: 0"></iframe>
+    <iframe src="http://www.w3schools.com/" frameborder="0" id="html5" style="display:none;width: 100%; height: 100%; position: absolute; top: 0; left: 0"></iframe>
+
+    <hr>
+
+    <button class="html5" data-mjg-type="video" data-mjg-src=".video1">Video</button>
+    <button class="html5" data-mjg-type="video" data-mjg-src=".video2">Video</button>
+
+    <video class="video1" controls loop style="display:none">
+        <source src="dev/video.mp4" type="video/mp4">
+        <source src="dev/video.webm" type="video/webm">
+        <p>sorry</p>
+    </video>
+
+    <script class="video2" type="text/html">
+        <video autoplay controls loop style="display:none">
+            <source src="dev/video.mp4" type="video/mp4">
+            <source src="dev/video.webm" type="video/webm">
+            <p>sorry</p>
+        </video>
+    </script>
+
+    <script src="src/mjGallery.js"></script>
+    <script src="src/general.js"></script>
+    <script src="src/TEMPLATE.js"></script>
+    <script src="src/Options.js"></script>
+    <script src="src/ItemsGenerator.js"></script>
+    <script src="src/InfoController.js"></script>
+    <script src="src/UIController.js"></script>
+    <script src="src/Pointer.js"></script>
+    <script src="src/Item/ItemTransformationController.js"></script>
+    <script src="src/Item/ItemTransformationCSSController.js"></script>
+    <script src="src/Item/ItemTransformationJSController.js"></script>
+    <script src="src/Item/Item.js"></script>
+    <script src="src/Item/ImageItem.js"></script>
+    <script src="src/Item/YouTubeItem.js"></script>
+    <script src="src/Item/IframeItem.js"></script>
+    <script src="src/Item/VimeoItem.js"></script>
+    <script src="src/Item/HTMLItem.js"></script>
+    <script src="src/Item/VideoItem.js"></script>
+<!--    <script src="build/mjgallery.build.min.js"></script>-->
+
+    <script>mjGallery.DEBUG = true;</script>
+
+    <script src="dev/googlemap-styles.build.js"></script>
+    <script defer async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_hHC_U83qwSgTWlK4rEC5xfNInW-KOAI&callback=googleMapsInit"></script>
+
+    <script>
+
+        /*global mjGallery*/
+
+        var gallery = new mjGallery({
+            fullSize: false,
+            selector: ".list:eq(0) .link",
+            itemTitle: function () {
+
+                return "#" + (this.getIndex() + 1);
+            },
+            itemDescription: function () {
+
+                return this.getSrc();
+            }
+        });
+
+        var gallery2 = new mjGallery({
+            fullSize: true,
+            selector: ".list:eq(1) .link",
+            info: false
+        });
+
+        var gallery3 = new mjGallery({
+            fullSize: false,
+            white: true,
+            selector: ".list:eq(2) .link",
+            zoomBtn: false,
+            infoBtn: false,
+            fullscreenBtn: false,
+            closeBtn: false
+        });
+
+        var gallery4 = new mjGallery({
+            fullSize: false,
+            openBy: document.querySelectorAll(".list:nth-of-type(4) .link")
+        });
+
+        var gallery5 = new mjGallery({
+            selector: ".list:eq(4) .link",
+            fullSize: true,
+            overlay: 1
+        });
+
+        var gallery6 = new mjGallery({
+            fullSize: false,
+            selector: ".list:eq(5) .link"
+        });
+
+        var gallery7 = new mjGallery({
+            selector: ".btn",
+            fullSize: true,
+            overlay: 1
+        });
+
+        var gallery8 = new mjGallery({
+            fullSize: false,
+            selector: ".button",
+            gallery: false
+        });
+
+        var gallery9 = new mjGallery({
+            selector: ".list-with-overlay .link",
+            itemTitle: "h2"
+        });
+
+        var gallery10 = new mjGallery({
+            openBy: ".preview:eq(0)"
+        });
+
+        var gallery11 = new mjGallery({
+            openBy: ".preview:eq(1)"
+        });
+
+        var gallery11 = new mjGallery({
+            selector: ".iframe"
+        });
+
+        var gallery12 = new mjGallery({
+            selector: ".video"
+        });
+
+        var gallery13 = new mjGallery({
+            selector: ".vimeo",
+            autoplay: false
+        });
+
+        var gallery14 = new mjGallery({
+            selector: ".html",
+
+            html: function (done) {
+
+                var $div = $("<div>");
+
+                $div.css({
+                    width: "85%",
+                    height: "85%",
+                    position: "absolute",
+                    top: -9999999,
+                    left: -9999999,
+                    visibility: "hidden"
+                });
+
+                $("body").append($div);
+
+                window.googlemap1 = new GoogleMap({
+                    el: $div,
+                    coords: [40.705565, -74.1180853],
+                    addMarker: true,
+                    onInit: function () {
+
+                        setTimeout(function() {
+
+                            $div.css({
+                                width: "100%",
+                                height: "100%",
+                                top: "0",
+                                left: "0",
+                                visibility: ""
+                            });
+
+                            done($div);
+
+                        }, 1000);
+                    }
+                });
+            }
+        });
+
+        var gallery15 = new mjGallery({
+            selector: ".html5"
+        });
+
+    </script>
+
+</body>
+</html>

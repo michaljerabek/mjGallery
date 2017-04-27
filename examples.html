@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gallery</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="examples/reset.css">
+    <link rel="stylesheet" href="examples/main.css">
+
+    <link rel="stylesheet" href="build/css/mjGallery.css">
+
+    <script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <script src="build/mjgallery.build.js"></script>
+
+    <script>mjGallery.DEBUG = true;</script>
+
+</head>
+<body>
+
+    <script src="http://mjerabek.wz.cz/onScreenLog.js"></script>
+
+    <h1 hidden>mjGallery</h1>
+
+    <h2>mjGallery Examples</h2>
+
+
+    <!--–––––––– ** EXAMPLE 1 ** –––––––––-->
+
+    <h3>Example 1 — Basic Gallery</h3>
+
+    <ul class="example1">
+
+        <li class="example1__item">
+            <a href="examples/img/img1.jpg" class="example1__link">
+                <img src="examples/img/thumb1.jpg" alt="Cat 1" class="example1__img">
+            </a>
+        </li>
+        <!-- The href attribute is used to find the image. Title is generated form the alt attribute. -->
+
+        <li class="example1__item">
+            <a href="examples/img/img2.jpg" class="example1__link" data-mjg-zoomable="false">
+                <img src="examples/img/thumb2.jpg" alt="Cat 2" class="example1__img">
+            </a>
+        </li>
+        <!-- Nonzoomable item. -->
+
+        <li class="example1__item">
+            <a href="examples/img/img3.jpg" class="example1__link" data-mjg-full-size="true">
+                <img src="examples/img/thumb3.jpg" alt="Cat 3" class="example1__img">
+            </a>
+        </li>
+        <!-- Item with maximum size of the window. -->
+
+        <li class="example1__item">
+            <a href="examples/img/img4.jpg" class="example1__link" data-mjg-view-width="60%" data-mjg-view-height="60%">
+                <img src="examples/img/thumb4.jpg" alt="Cat 4" class="example1__img">
+            </a>
+        </li>
+        <!-- Item with maximum size of 60 % of the width or the height of the window. -->
+
+        <li class="example1__item">
+            <a href="examples/img/img5.jpg" class="example1__link" data-mjg-full-size="true" data-mjg-cover="true" data-mjg-max-width="calc(100% - 20px)" data-mjg-max-height="calc(100% - 20px)">
+                <img src="examples/img/thumb5.jpg" alt="Cat 5" class="example1__img">
+            </a>
+        </li>
+        <!-- Full-size item with 10px border. Image is covering the view/window (it's not scaled down to fit the view). -->
+
+        <li class="example1__item">
+            <a href="examples/img/img6.jpg" class="example1__link" aria-describedby="example1__description1">
+                <img src="examples/img/thumb6.jpg" alt="Cat 6" class="example1__img">
+            </a>
+            <p id="example1__description1" style="display: none">This is description of photo #6.</p>
+        </li>
+        <!-- Item with description selected by aria-describedby attribute. -->
+
+        <li class="example1__item">
+            <a href="examples/img/img7.jpg" class="example1__link">
+                <img src="examples/img/thumb7.jpg" alt="Cat 7" class="example1__img">
+                <p style="display: none">This is description of photo #7.</p>
+            </a>
+        </li>
+        <!-- Item with description from its content (element p). -->
+
+        <li class="example1__item">
+            <a href="examples/img/img8.jpg" class="example1__link" data-mjg-description="false">
+                <img src="examples/img/thumb8.jpg" alt="Cat 8" class="example1__img">
+                <p style="display: none">This is invisible description of photo #8.</p>
+            </a>
+        </li>
+        <!-- Item with disabled description (otherwise it would use the p element). -->
+
+        <li class="example1__item">
+            <a href="examples/img/img9.jpg" class="example1__link" data-mjg-title="false">
+                <img src="examples/img/thumb9.jpg" alt="Cat 9" class="example1__img">
+            </a>
+        </li>
+        <!-- Item with disabled title (otherwise it would use the alt attribute from the img). -->
+
+        <li class="example1__item">
+            <a href="examples/img/img10.jpg" data-mjg-title="Custom Title For Cat 1" data-mjg-description="This is longer description of the photo." class="example1__link">
+                <img src="examples/img/thumb10.jpg" alt="Cat 10" class="example1__img">
+            </a>
+        </li>
+        <!-- Item with custom title and description. -->
+
+    </ul>
+
+<pre class="code example1__code html"></pre>
+
+    <pre class="code example1__code js">var example1 = new mjGallery({
+    selector: ".example1__link" //items with source (with href or data-mjg-src attribute)
+});</pre>
+
+    <script>/*global mjGallery, $*/
+
+        var example1 = new mjGallery({
+            selector: ".example1__link" //items with source (with href or data-mjg-src attribute)
+        });
+
+        $(".example1__code.html").text($(".example1")[0].outerHTML.replace(/\n    /g, "\n"));
+    </script>
+
+    <!--–––––––– // EXAMPLE 1 // –––––––––-->
+
+
+    <!--–––––––– ** EXAMPLE 2 ** –––––––––-->
+
+    <h3>Example 2 — Random Images (non-gallery mode)</h3>
+
+    <ul class="example2">
+
+        <!-- Responsive images can be created by data-mjg-srcset and data-mjg-sizes attributes. -->
+
+        <li class="example2__item">
+            <a href="examples/img/img1.jpg" data-mjg-srcset="examples/img/img1.jpg 1x, examples/img/img1.jpg 2x" class="example2__link">
+                <img src="examples/img/thumb1.jpg" alt="Cat 1" class="example2__img">
+            </a>
+        </li>
+
+        <li class="example2__item">
+            <a href="examples/img/img2.jpg" data-mjg-srcset="examples/img/img2.jpg 1x, examples/img/img2.jpg 2x" class="example2__link">
+                <img src="examples/img/thumb2.jpg" alt="Cat 2" class="example2__img">
+            </a>
+        </li>
+
+        <li class="example2__item">
+            <a href="examples/img/img3.jpg" data-mjg-srcset="examples/img/img3.jpg 1x, examples/img/img3.jpg 2x" class="example2__link">
+                <img src="examples/img/thumb3.jpg" alt="Cat 3" class="example2__img">
+            </a>
+        </li>
+
+        <li class="example2__item">
+            <a href="examples/img/img4.jpg" data-mjg-srcset="examples/img/img4.jpg 1x, examples/img/img4.jpg 2x" class="example2__link">
+                <img src="examples/img/thumb4.jpg" alt="Cat 4" class="example2__img">
+            </a>
+        </li>
+
+        <li class="example2__item">
+            <a href="examples/img/img5.jpg" data-mjg-srcset="examples/img/img5.jpg 1x, examples/img/img5.jpg 2x" class="example2__link" data-mjg-title="false">
+                <img src="examples/img/thumb5.jpg" alt="Cat 5" class="example2__img">
+            </a>
+        </li>
+
+    </ul>
+
+    <pre class="code example2__code js">var example2 = new mjGallery({
+    selector: ".example2__link", //items with source (with href or data-mjg-src attribute)
+    gallery: false, //images will not be grouped to gallery
+    zoomBtn: false, //zoom button will be hidden
+    fullscreenBtn: false, //fullscreen button will be hidden
+    info: false //info will be hidden, but can be turned on (infoBtn is not set to false), if there is something to show (see itam #5)
+});</pre>
+
+    <script>/*global mjGallery, $*/
+
+        var example2 = new mjGallery({
+            selector: ".example2__link", //items with source (with href or data-mjg-src attribute)
+            gallery: false, //images will not be grouped to gallery
+            zoomBtn: false, //zoom button will be hidden
+            fullscreenBtn: false, //fullscreen button will be hidden
+            info: false //info will be hidden, but can be turned on (infoBtn is not set to false), if there is something to show (see itam #5)
+        });
+    </script>
+
+    <!--–––––––– // EXAMPLE 2 // –––––––––-->
+
+
+    <!--–––––––– ** EXAMPLE 3 ** –––––––––-->
+
+    <h3>Example 3 — Gallery Openable By Button</h3>
+
+    <ul class="example3">
+
+        <li class="example3__item">
+            <div data-mjg-src="examples/img/img6.jpg" class="example3__target">
+                <div class="title">Subject #6</div>
+                <img src="examples/img/thumb6.jpg" alt="Cat 6" class="example3__img">
+            </div>
+        </li>
+
+        <li class="example3__item">
+            <div data-mjg-src="examples/img/img7.jpg" class="example3__target">
+                <div class="title">Subject #7</div>
+                <img src="examples/img/thumb7.jpg" alt="Cat 7" class="example3__img">
+            </div>
+        </li>
+
+        <li class="example3__item">
+            <div data-mjg-src="examples/img/img8.jpg" class="example3__target">
+                <div class="title">Subject #8</div>
+                <img src="examples/img/thumb8.jpg" alt="Cat 8" class="example3__img">
+            </div>
+        </li>
+
+        <li class="example3__item">
+            <div data-mjg-src="examples/img/img9.jpg" class="example3__target">
+                <div class="title">Subject #9</div>
+                <img src="examples/img/thumb9.jpg" alt="Cat 9" class="example3__img">
+            </div>
+        </li>
+
+        <li class="example3__item">
+            <div data-mjg-src="examples/img/img10.jpg" class="example3__target">
+                <div class="title">Subject #10</div>
+                <img src="examples/img/thumb10.jpg" alt="Cat 10" class="example3__img">
+            </div>
+        </li>
+
+    </ul>
+
+    <div class="example3__buttons buttons">
+
+        <button type="button" class="example3__button button" data-mjg-selector=".example3__target">Open Gallery</button>
+        <!-- Items will be selected by data-mjg-selector (can be set by selector option — in this case the gallery will be also opened by clicking an item). -->
+
+        <button type="button" class="example3__button button" data-mjg-selector=".example3__target" data-mjg-open=".example3__item:eq(1) .example3__target">Open Gallery From Second Image</button>
+        <!-- Shows item matching data-mjg-open selector. -->
+
+        <a href="examples/img/img8.jpg" class="example3__button button" data-mjg-selector=".example3__target">Open Gallery From Third Image</a>
+        <!-- Shows item with source (data-mjg-src / href / src) matching the href attribute. -->
+
+        <button type="button" class="example3__button button" data-mjg-selector=".example3__target" data-mjg-src="examples/img/img9.jpg">Open Gallery From Fourth Image</button>
+        <!-- Shows item with source (data-mjg-src / href / src) matching the data-mjg-src attribute. -->
+
+    </div>
+
+    <pre class="code example3__code html"></pre>
+
+    <pre class="code example3__code js">var example3 = new mjGallery({
+    openBy: ".example3__button", //button for opening the gallery
+    fullSize: true, //items can be as big as window
+    cover: window.innerWidth &gt; window.innerHeight, //items will cover the whole view/window (on landscape)
+    maxWidth: "calc(100% - 20px)", //10px border around
+    maxHeight: "calc(100% - 20px)", //10px border around
+    title: ".title", //selector for title (not necesary — it will be detected automatically, because it has "title" in class attribute)
+    description: function () { //generates description
+        return this.getSrc();
+    }
+});
+
+//use cover only on landscape
+$(window).on("orientationchange", function () {
+    example3.refresh({
+        cover: window.innerWidth &gt; window.innerHeight
+    });
+});</pre>
+
+    <script>/*global mjGallery, $, window*/
+
+        var example3 = new mjGallery({
+            openBy: ".example3__button", //button for opening the gallery
+            fullSize: true, //items can be as big as window
+            cover: window.innerWidth > window.innerHeight, //items will cover the whole view/window (on landscape)
+            maxWidth: "calc(100% - 20px)", //10px border around
+            maxHeight: "calc(100% - 20px)", //10px border around
+            title: ".title", //selector for title (not necesary — it will be detected automatically, because it has "title" in class attribute)
+            description: function () { //generates description
+                return this.getSrc();
+            }
+        });
+
+        //use cover only on landscape
+        $(window).on("orientationchange", function () {
+            example3.refresh({
+                cover: window.innerWidth > window.innerHeight
+            });
+        });
+
+        $(".example3__code.html").text($(".example3__buttons").html().trim().replace(/\n        /g, "\n"));
+
+    </script>
+
+    <!--–––––––– // EXAMPLE 3 // –––––––––-->
+
+
+    <!--–––––––– ** EXAMPLE 4 ** –––––––––-->
+
+    <h3>Example 4 — Iframe</h3>
+
+    <div class="example4__buttons buttons buttons--left">
+
+        <button type="button" class="example4__button button" data-mjg-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d163931.2564238859!2d14.325543273922262!3d50.059585362134214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470b939c0970798b%3A0x400af0f66164090!2sPraha!5e0!3m2!1scs!2scz!4v1492860644125">Google Map</button>
+        <!-- Doesn't need data-mjg-type="iframe" — it's detected automatically from src. -->
+
+        <a class="example4__button button" href="examples.html" data-mjg-type="iframe">Website</a>
+        <!-- Data-mjg-type must be "iframe". -->
+
+    </div>
+
+    <pre class="code example4__code html"></pre>
+
+<pre class="code example4__code js">var example4 = new mjGallery({
+    selector: ".example4__button", //items with source (with href or data-mjg-src attribute)
+    counter: false, //current position and total count of items will be hidden
+    info: false //info will be hidden, but can be turned on (infoBtn is not set to false), if there is something to show
+});</pre>
+
+    <script>/*global mjGallery, $, window*/
+
+        var example4 = new mjGallery({
+            selector: ".example4__button", //items with source (with href or data-mjg-src attribute)
+            counter: false, //current position and total count of items will be hidden
+            info: false //info will be hidden, but can be turned on (infoBtn is not set to false), if there is something to show
+        });
+
+        $(".example4__code.html").text($(".example4__buttons").html().trim().replace(/\n        /g, "\n"));
+
+    </script>
+
+    <!--–––––––– // EXAMPLE 4 // –––––––––-->
+
+
+    <!--–––––––– ** EXAMPLE 5 ** –––––––––-->
+
+    <h3>Example 5 — YouTube &amp; Vimeo</h3>
+
+    <div class="example5__buttons buttons buttons--left">
+
+        <button type="button" class="example5__button button" data-mjg-src="https://www.youtube.com/watch?v=wfvwfB8M4qc" title="data-mjg-src='https://www.youtube.com/watch?v=wfvwfB8M4qc'">YouTube — URL</button>
+        <!-- Doesn't need data-mjg-type="youtube" — it's detected automatically from src. -->
+
+        <button type="button" class="example5__button button" data-mjg-src="https://www.youtube.com/embed/dd_j1euRTkQ" title="data-mjg-src='https://www.youtube.com/embed/dd_j1euRTkQ'">YouTube — Embed</button>
+        <!-- Doesn't need data-mjg-type="youtube" — it's detected automatically from src. -->
+
+        <a href="https://youtu.be/lx3egn8v4Mg" class="example5__button button" data-mjg-autoplay="true" title="href='https://youtu.be/lx3egn8v4Mg'">YouTube — Short URL</a>
+        <!-- Doesn't need data-mjg-type="youtube" — it's detected automatically from src (href). Video will be played automatically. -->
+
+        <button type="button" class="example5__button button" data-mjg-src="T0t5Pa5wbVo" data-mjg-type="youtube" title="data-mjg-src='T0t5Pa5wbVo'">YouTube — ID</button>
+        <!--  Src is ID of the video — data-mjg-type must be "youtube". -->
+
+        <button type="button" class="example5__button button" data-mjg-src="https://vimeo.com/143200189" title="data-mjg-src='https://vimeo.com/143200189'">Vimeo — URL</button>
+        <!-- Doesn't need data-mjg-type="vimeo" — it's detected automatically from src. -->
+
+        <button type="button" class="example5__button button" data-mjg-src="https://player.vimeo.com/video/87427325" title="data-mjg-src='https://player.vimeo.com/video/87427325'">Vimeo — Embed</button>
+        <!-- Doesn't need data-mjg-type="vimeo" — it's detected automatically from src. -->
+
+        <button type="button" class="example5__button button" data-mjg-src="31071933" data-mjg-type="vimeo" data-mjg-autoplay="true" title="data-mjg-src='31071933'">Vimeo — ID</button>
+        <!--  Src is ID of the video — data-mjg-type must be "vimeo". Video will be played automatically. -->
+
+    </div>
+
+    <pre class="code example5__code html"></pre>
+
+<pre class="code example5__code js">var example5 = new mjGallery({
+    selector: ".example5__button" //items with source (with href or data-mjg-src attribute)
+});</pre>
+
+    <script>/*global mjGallery, $, window*/
+
+        var example5 = new mjGallery({
+            selector: ".example5__button" //items with source (with href or data-mjg-src attribute)
+        });
+
+        $(".example5__code.html").text($(".example5__buttons").html().trim().replace(/\n        /g, "\n"));
+
+    </script>
+
+    <!--–––––––– // EXAMPLE 5 // –––––––––-->
+
+
+    <!--–––––––– ** EXAMPLE 6 ** –––––––––-->
+
+    <h3>Example 6 — HTML5 Video</h3>
+
+    <p>A markup for the video must be provided in the document. The <code>&lt;video&gt;</code> will be selected according to the <code>data-mg-src="selector"</code> attribute.</p>
+
+    <div class="example6__buttons buttons buttons--left">
+
+        <button type="button" class="example6__button button" data-mjg-src="#video1" data-mjg-type="video">HTML5 Video — Appended</button>
+        <!-- #video1 will be removed from DOM and inserted into the gallery. Append is the default method — data-mjg-method="append" is not necessary. -->
+
+        <video id="video1" controls loop style="display:none">
+            <source src="examples/video/video1.mp4" type="video/mp4">
+            <source src="examples/video/video1.webm" type="video/webm">
+            <p>Your browser doesn't support HTML5 Video.</p>
+        </video>
+
+        <button type="button" class="example6__button button" data-mjg-src="#video2" data-mjg-type="video" data-mjg-method="clone">HTML5 Video — Cloned</button>
+        <!-- #video2 will be cloned and inserted into the gallery. -->
+
+        <video id="video2" controls loop style="display:none">
+            <source src="examples/video/video2.mp4" type="video/mp4">
+            <source src="examples/video/video2.webm" type="video/webm">
+            <p>Your browser doesn't support HTML5 Video.</p>
+        </video>
+
+        <button type="button" class="example6__button button" data-mjg-src="#video3" data-mjg-type="video">HTML5 Video — Script Template</button>
+        <!-- #video3 will be cloned and inserted into the gallery. -->
+
+        <script id="video3" type="text/html">
+            <video controls loop>
+                <source src="examples/video/video3.mp4" type="video/mp4">
+                <source src="examples/video/video3.webm" type="video/webm">
+                <p>Your browser doesn't support HTML5 Video.</p>
+            </video>
+        </script>
+
+    </div>
+
+    <pre class="code example6__code html"></pre>
+
+<pre class="code example6__code js">var example6 = new mjGallery({
+    selector: ".example6__button", //items with source (with data-mjg-src attribute)
+    autoplay: true //videos will be played automatically
+});</pre>
+
+    <script>/*global mjGallery, $, window*/
+
+        var example6 = new mjGallery({
+            selector: ".example6__button", //items with source (with data-mjg-src attribute)
+            autoplay: true //videos will be played automatically
+        });
+
+        $(".example6__code.html").text($(".example6__buttons").html().trim().replace(/\n        /g, "\n"));
+
+    </script>
+
+    <!--–––––––– // EXAMPLE 6 // –––––––––-->
+
+
+    <!--–––––––– ** EXAMPLE 7 ** –––––––––-->
+
+    <h3>Example 7 — HTML From The Document</h3>
+
+    <div class="example7__buttons buttons buttons--left">
+
+        <button type="button" class="example7__button button" data-mjg-src="#html1" data-mjg-type="html" data-mjg-max-width="768">HTML Dialog — Appended</button>
+        <!-- #html1 will be removed from DOM and inserted into the gallery. Append is the default method — data-mjg-method="append" is not necessary. -->
+
+        <div id="html1" class="example7__dialog" style="display: none">
+
+            <a href="#" data-mjg-action="close" class="example7__close button">&times;</a>
+            <!-- Attribute data-mjg-action may call any function from the mjGallery instance. -->
+
+            <div class="example7__content-wrapper" data-mjg-scrollable="true">
+            <!-- Attribute data-mjg-scrollable marks element, which shouldn't prevent scrolling. -->
+                <h2>HTML Dialog — Appended</h2>
+                <p>Placeat atque praesentium minima facere amet excepturi laborum ipsum molestiae, obcaecati sunt expedita perspiciatis quas ullam sint dolorum aliquid quis natus quo, iusto consequuntur provident tempore sit explicabo reiciendis? Quam ratione nihil nostrum cum!</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum impedit accusantium maiores odit aspernatur quos harum illo numquam at corporis fugiat, minima sequi ducimus aut officia hic unde deserunt itaque. Cumque harum pariatur, in rerum nesciunt, voluptates animi, quos voluptatibus omnis eius neque obcaecati quas iusto recusandae beatae mollitia consectetur!</p>
+                <h3>Tempore sit explicabo reiciendis</h3>
+                <p>Recusandae aperiam quisquam reiciendis eum illo dolor, quo deserunt magnam et sint voluptatum est dicta maiores nam quae, magni accusamus sapiente iure ipsum praesentium distinctio ex a dolorem. Eum, totam similique nihil quia neque tempore explicabo.</p>
+                <p>Qccusantium maiores odit aspernatur quos harum illo numquam at corporis fugiat, minima sequi ducimus aut officia hic unde deserunt itaque. Cumque harum pariatur, in rerum nesciunt, voluptates animi, quos voluptatibus omnis eius neque obcaecati quas iusto recusandae beatae mollitia consectetur! Placeat atque praesentium minima facere amet excepturi laborum ipsum molestiae, obcaecati sunt expedita perspiciatis quas ullam sint dolorum aliquid quis natus quo.</p>
+                <p>Eexpedita perspiciatis quas ullam sint dolorum aliquid quis natus quo, iusto consequuntur provident tempore sit explicabo reiciendis? Eum, totam similique nihil quia neque tempore explicabo. Quam ratione nihil nostrum cum!</p>
+                <h3>Aspernatur quos harum</h3>
+                <p>Laboriosam, doloremque voluptates mollitia aspernatur! Veniam corporis laudantium non velit provident deserunt et atque perferendis, architecto eligendi quidem assumenda adipisci minima consequuntur sit recusandae. Sit labore, quos consectetur?</p>
+                <p>Illo, earum, quis. Expedita libero quaerat, nulla labore, dignissimos fuga autem. At similique neque est aliquam, necessitatibus repudiandae unde sequi, libero ut quo dolor rem eos minima culpa quisquam aperiam mollitia laboriosam cum, ratione eius alias. Soluta doloremque error dignissimos impedit obcaecati eligendi quaerat, sit eos, aspernatur fuga nesciunt adipisci porro mollitia asperiores vel. Officia id velit, rem harum commodi totam ratione voluptatum consequatur quam quos facilis dolores praesentium itaque voluptates cum beatae iusto provident, debitis sequi nam minus error culpa enim. Eius optio iste consequuntur, maxime iusto! Atque et doloremque architecto totam! Obcaecati cupiditate aspernatur facere assumenda tempore, mollitia minus! Beatae possimus, nulla officiis, aut aperiam nemo quisquam repudiandae cupiditate officia ducimus odit voluptatibus, pariatur rem illo quod. Soluta sequi, quaerat aliquam eligendi!</p>
+            </div>
+        </div>
+
+        <button type="button" class="example7__button button" data-mjg-src="#html2" data-mjg-type="html" data-mjg-method="clone" data-mjg-max-width="512px">HTML Content — Cloned</button>
+        <!-- #html2 will be cloned and inserted into the gallery. -->
+
+        <div id="html2" class="example7__form" style="display: none">
+            <a href="#" data-mjg-action="close" class="example7__close-form">&times;</a>
+            <!-- Attribute data-mjg-action may call any function from the mjGallery instance. -->
+
+            <h2>Contact Us</h2>
+            <form action="">
+                <label for="email">Email</label>
+                <input type="text" name="email" id="email">
+                <label for="mgs">Message</label>
+                <textarea name="msg" id="msg"></textarea>
+                <button class="button">Send Message</button>
+            </form>
+        </div>
+
+        <button type="button" class="example7__button button" data-mjg-src="#html3" data-mjg-type="html">HTML Content — Script Template</button>
+        <!-- #html3 will be cloned and inserted into the gallery. -->
+
+        <script id="html3" type="text/html">
+            <a href="#" data-mjg-action="prev" class="example7__prev">prev</a>
+            <a href="#" data-mjg-action="close" class="example7__close2">close</a>
+            <a href="#" data-mjg-action="next" class="example7__next">next</a>
+            <!-- Attribute data-mjg-action may call any function from the mjGallery instance. -->
+        </script>
+
+    </div>
+
+    <pre class="code example7__code html"></pre>
+
+<pre class="code example7__code js">var example7 = new mjGallery({
+    selector: ".example7__button" //items with source (with data-mjg-src attribute)
+});</pre>
+
+    <script>/*global mjGallery, $, window*/
+
+        var example7 = new mjGallery({
+            selector: ".example7__button" //items with source (with data-mjg-src attribute)
+        });
+
+        $(".example7__code.html").text($(".example7__buttons").html().trim().replace(/\n        /g, "\n"));
+
+    </script>
+
+    <!--–––––––– // EXAMPLE 7 // –––––––––-->
+
+
+    <!--–––––––– ** EXAMPLE 8 ** –––––––––-->
+
+    <h3>Example 8 — Generated HTML</h3>
+
+    <div class="example8__buttons buttons buttons--left">
+
+        <button type="button" class="example8__button button" data-mjg-title="Loading current weather in Prague" data-mjg-description="Please wait...">Current Weather</button>
+        <!-- Data-mjg-method="generate" and data-mjg-type="html" are not necessary, because there is no data-mjg-src or href and function for generating the content is in options. -->
+
+    </div>
+
+    <pre class="code example8__code html"></pre>
+
+<pre class="code example8__code js">var example8 = new mjGallery({
+    selector: ".example8__button", //items
+    html: function (done, item) { //generates the html content
+
+        var req = $.get("api.openweathermap.org/data/2.5/weather?q=Prague&units=metric&APPID=699e0132d2f7e3fea7a91128af7959e1");
+
+        req.done(function (result) {
+
+            var template = "&lt;h1 class=\"example8&lowbar;&lowbar;weather\"&gt;&lt;div&gt;Prague&lt;&sol;div&gt; &lt;div&gt;" + result.main.temp.toFixed(1) + " °C&lt;&sol;div&gt; &lt;div&gt;" + result.weather[0].description + "&lt;&sol;div&gt;&lt;&sol;h1&gt;",
+
+                sunrise = new Date(result.sys.sunrise),
+                sunset = new Date(result.sys.sunset);
+
+            item.setTitle("Weather In Prague")
+                    .setDescription("Sunrise: " + sunrise.toLocaleTimeString() + "; Sunset: " + sunset.toLocaleTimeString() + ";");
+
+            done(template); //function done must be called with html content (selectable with jQuery or jQuery object)
+        });
+    },
+    counter: false //current position and total count of items will be hidden
+});</pre>
+
+    <script>/*global mjGallery, $, window*/
+
+        var example8 = new mjGallery({
+            selector: ".example8__button", //items
+            html: function (done, item) { //generates the html content
+
+                var req = $.get("http://api.openweathermap.org/data/2.5/weather?q=Prague&units=metric&APPID=699e0132d2f7e3fea7a91128af7959e1");
+
+                req.done(function (result) {
+
+                    var template = "<h1 class=\"example8__weather\"><div>Prague</div> <div>" + result.main.temp.toFixed(1) + " °C</div> <div>" + result.weather[0].description + "</div></h1>",
+
+                        sunrise = new Date(result.sys.sunrise),
+                        sunset = new Date(result.sys.sunset);
+
+                    item.setTitle("Weather In Prague")
+                        .setDescription("Sunrise: " + sunrise.toLocaleTimeString() + "; Sunset: " + sunset.toLocaleTimeString() + ";");
+
+                    done(template); //function done must be called with html content (selectable with jQuery or jQuery object)
+                });
+            },
+            counter: false //current position and total count of items will be hidden
+        });
+
+        $(".example8__code.html").text($(".example8__buttons").html().trim().replace(/\n        /g, "\n"));
+
+    </script>
+
+    <!--–––––––– // EXAMPLE 8 // –––––––––-->
+
+
+    <!--–––––––– ** EVENTS ** –––––––––-->
+
+    <h2>Events</h2>
+
+    <p>The default behavior on some events can be prevented by returning <code>false</code> or by calling <code>preventDefault()</code> on event object.</p>
+
+    <dl>
+        <dt><code>construct</code></dt>
+        <dd>When mjGallery is constructing. The default behavior can be prevented.</dd>
+        <dt><code>init</code></dt>
+        <dd>When mjGallery is initialized.</dd>
+        <dt><code>open</code></dt>
+        <dd>When mjGallery is opened, but before the animation is done.</dd>
+        <dt><code>beforeopen</code></dt>
+        <dd>Before mjGallery is opened. The default behavior can be prevented.</dd>
+        <dt><code>beforefirstopen</code></dt>
+        <dd>Before the first opening of mjGallery. The default behavior can be prevented.</dd>
+        <dt><code>afteropen</code></dt>
+        <dd>When mjGallery is opened and the animation is done.</dd>
+        <dt><code>close</code></dt>
+        <dd>When mjGallery is closed, but before the animation is done.</dd>
+        <dt><code>beforeclose</code></dt>
+        <dd>Before mjGallery is closed. The default behavior can be prevented.</dd>
+        <dt><code>afterclose</code></dt>
+        <dd>When mjGallery is closed and the animation is done.</dd>
+        <dt><code>change</code></dt>
+        <dd>When current item is changed by user interaction (or by calling <code>next</code> or <code>prev</code> method), but before the animation is done.</dd>
+        <dt><code>beforechange</code></dt>
+        <dd>Before current item is changed by user interaction (or by calling <code>next</code> or <code>prev</code> method). The default behavior can be prevented.</dd>
+        <dt><code>afterchange</code></dt>
+        <dd>When current item is changed by user interaction (or by calling <code>next</code> or <code>prev</code> method) and the animation is done.</dd>
+        <dt><code>currentitemchanged</code></dt>
+        <dd>When current item is changed.</dd>
+        <dt><code>beforedestroy</code></dt>
+        <dd>Before mjGallery is destroyed. The default behavior can be prevented.</dd>
+        <dt><code>afterdestroy</code></dt>
+        <dd>After mjGallery is destroyed.</dd>
+        <dt><code>beforerefresh</code></dt>
+        <dd>Before mjGallery is refreshed. The default behavior can be prevented.</dd>
+        <dt><code>afterrefresh</code></dt>
+        <dd>After mjGallery is refreshed.</dd>
+        <dt><code>load</code></dt>
+        <dd>When item is loaded.</dd>
+        <dt><code>youtubeready</code></dt>
+        <dd>When YouTube video is ready to play. The default behavior (autoplay) can be prevented.</dd>
+        <dt><code>vimeoready</code></dt>
+        <dd>When Vimeo video is ready to play. The default behavior (autoplay) can be prevented.</dd>
+        <dt><code>videoready</code></dt>
+        <dd>When HTML5 video is ready to play. The default behavior (autoplay) can be prevented.</dd>
+        <dt><code>event</code></dt>
+        <dd>When the default behavior of an event (<code>scroll</code>, <code>mousemove</code>, &hellip;) will be prevented. If this event (<code>event</code>) is prevented, the original event won't be used.</dd>
+        <dt><code>zoom</code></dt>
+        <dd>When item is zoomed in or out.</dd>
+        <dt><code>resize</code></dt>
+        <dd>When window is resized.</dd>
+    </dl>
+
+    <!--–––––––– // EVENTS // –––––––––-->
+
+
+    <script>/*global $*/
+
+        $(".code").each(function () {
+
+            var content = this.innerHTML;
+
+            if (this.className.match(/html/)) {
+
+                content = content.replace(/&lt;!--/g, "<span class=\"comment\">&lt;!--")
+                    .replace(/--&gt;/g, "--&gt;</span>");
+            }
+
+            if (this.className.match(/js/)) {
+
+                content = content.replace(/\/\//g, "<span class=\"comment\">//")
+                    .replace(/(?!\/\/.*)\n/g, "</span>\n");
+            }
+
+            this.innerHTML = content;
+        });
+
+    </script>
+    <script src="http://mjerabek.wz.cz/onScreenLog.js"></script>
+</body>
+</html>
