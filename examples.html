@@ -20,8 +20,6 @@
 </head>
 <body>
 
-    <script src="http://mjerabek.wz.cz/onScreenLog.js"></script>
-
     <h1 hidden>mjGallery</h1>
 
     <h2>mjGallery Examples</h2>
@@ -559,7 +557,7 @@ $(window).on("orientationchange", function () {
             selector: ".example8__button", //items
             html: function (done, item) { //generates the html content
 
-                var req = $.get("http://api.openweathermap.org/data/2.5/weather?q=Prague&units=metric&APPID=699e0132d2f7e3fea7a91128af7959e1");
+                var req = $.get("https://api.openweathermap.org/data/2.5/weather?q=Prague&units=metric&APPID=699e0132d2f7e3fea7a91128af7959e1");
 
                 req.done(function (result) {
 
