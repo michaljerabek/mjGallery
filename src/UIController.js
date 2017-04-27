@@ -1,0 +1,663 @@
+/*jslint indent: 4, white: true, nomen: true, regexp: true, unparam: true, node: true, browser: true, devel: true, nomen: true, plusplus: true, regexp: true, sloppy: true, vars: true*/
+/*global jQuery*/
+
+(function (ns, $) {
+
+    var NS = "UIController",
+
+        pointerMovedOnOverlay = false,
+        pointerMovedOnBtn = false,
+
+        onOverlay = function (event) {
+
+            var onOverlay = this.mjGallery.getCurrentItem().considerEventAsOnOverlay(event);
+
+            //(1) při psunutí myši/prstu nezavírat
+            if (event.type.match(/move/) && onOverlay) {
+
+                pointerMovedOnOverlay = true;
+
+                //uživatel posouvá obrázkem => zachovat události
+                if (this.mjGallery.eventsActive) {
+
+                    return;
+                }
+
+                return false;
+            }
+
+            //(2) při psunutí myši/prstu nezavírat
+            if (pointerMovedOnOverlay) {
+
+                return;
+            }
+
+            if (onOverlay && !event.type.match(/move/)) {
+
+                this.mjGallery.close();
+
+                //zrušit click
+                if (event.type === "touchend") {
+
+                    return false;
+                }
+            }
+        },
+
+        tapOnBtn = function (event) {
+
+            if (pointerMovedOnBtn || this.mjGallery.ignoreEvents || (event.type.match(/touch/) && event.originalEvent.touches.length)) {
+
+                pointerMovedOnBtn = false;
+
+                event.preventDefault();
+
+                return;
+            }
+
+            var $target = ns.$t(event.target),
+
+                $btn = $target.closest(ns.DATA.selector("action"));
+
+            if ($btn.length) {
+
+                var actions = $btn.data(ns.DATA.action).split(",");
+
+                actions.forEach(function (action) {
+
+                    if (typeof this.mjGallery.getAPI()[action] === "function") {
+
+                        this.mjGallery.getAPI()[action]();
+
+                    } else if (typeof this.mjGallery[action] === "function") {
+
+                        this.mjGallery[action]();
+
+                    } else if (typeof this[action] === "function") {
+
+                        this[action]();
+                    }
+                }, this);
+
+                return false;
+            }
+        },
+
+        moveByMouseWheel = function (event) {
+
+            var dir;
+
+            if (event.type === "DOMMouseScroll") {
+
+                dir = event.originalEvent.detail > 0 ? ns.DIR.DOWN : ns.DIR.UP;
+
+            } else {
+
+                dir = event.originalEvent.wheelDelta < 0 ? ns.DIR.DOWN : ns.DIR.UP;
+            }
+
+            this.mjGallery[dir === ns.DIR.DOWN ? "next" : "prev"]();
+        },
+
+        moveByKeyboard = function (event) {
+
+            var dir = ~[38, 39].indexOf(event.which) ? ns.DIR.DOWN : ns.DIR.UP;
+
+            this.mjGallery[dir === ns.DIR.DOWN ? "next" : "prev"]();
+        },
+
+        onKeyup = function (event) {
+
+            if (this.mjGallery.isClosed()) {
+
+                return;
+            }
+
+            ///TAB
+            if (event.which === 9) {
+
+                this.mjGallery.get().addClass(ns.CLASS.selfKeyboardFocus);
+
+                return;
+            }
+
+            var currentItem = this.mjGallery.getCurrentItem();
+
+            ///ESC
+            if (event.which === 27) {
+
+                if (currentItem.isZoomedIn() && !currentItem.shouldPreserveEvent(ns.EVENTS.KEYS, event)) {
+
+                    this.mjGallery.toggleZoom();
+
+                    return false;
+                }
+
+                this.mjGallery.close();
+
+                return false;
+            }
+
+            if (currentItem.shouldPreserveEvent(ns.EVENTS.KEYS, event)) {
+
+                return;
+            }
+
+            //+
+            if (event.which === 107 && currentItem.isZoomable()) {
+
+                this.mjGallery.zoomIn();
+
+                return false;
+            }
+
+            //-
+            if (event.which === 109 && currentItem.isZoomable()) {
+
+                this.mjGallery.zoomOut();
+
+                return false;
+            }
+
+            //šipky
+            if (~[37, 38, 39, 40].indexOf(event.which)) {
+
+                if (currentItem.isZoomedIn()) {
+
+                    this.mjGallery.ignoreEvents = true;
+
+                    currentItem.fitZoom(function () {
+
+                        this.mjGallery.ignoreEvents = false;
+
+                    }.bind(this));
+
+                    return false;
+                }
+
+                moveByKeyboard.call(this, event);
+
+                return false;
+            }
+        },
+
+        onKeydown = function (event) {
+
+            if (this.mjGallery.isClosed() || this.mjGallery.getCurrentItem().shouldPreserveEvent(ns.EVENTS.KEYS, event)) {
+
+                return;
+            }
+
+            //šipky
+            if (~[37, 38, 39, 40].indexOf(event.which)) {
+
+                if (this.mjGallery.getCurrentItem().isZoomedIn()) {
+
+                    this.mjGallery.getCurrentItem().translateZoomBy([
+                        event.which === 37 ? ns.TRANTSLATE_ZOOM_STEP : event.which === 39 ? -ns.TRANTSLATE_ZOOM_STEP : 0,
+                        event.which === 38 ? ns.TRANTSLATE_ZOOM_STEP : event.which === 40 ? -ns.TRANTSLATE_ZOOM_STEP : 0
+                    ], ((1000 / 60) / 1000) * 2);
+
+                    this.mjGallery.ignoreEvents = true;
+                }
+
+                return false;
+            }
+
+            //+-
+            if (this.mjGallery.getCurrentItem().isZoomable() && ~[107, 109].indexOf(event.which)) {
+
+                return false;
+            }
+        },
+
+        initFocus = function () {
+
+            var $iframe = this.mjGallery.getCurrentItem().getIframe();
+
+            if ($iframe && $iframe.length) {
+
+                $iframe[0].focus();
+
+            } else if (this.rightArrow) {
+
+                this[this.rightArrowRepeat ? "$leftArrow" : "$rightArrow"].focus();
+
+            } else if (this.leftArrow) {
+
+                this[this.leftArrowRepeat ? "$rightArrow" : "$leftArrow"].focus();
+
+            } else {
+
+                this.$closeBtn.focus();
+            }
+
+            ns.EVENT.on(ns.EVENT.afterChange, function () {
+
+                if (this.mjGallery.getTotalCount() < 2) {
+
+                    return;
+                }
+
+                if (this.addFocusRight) {
+
+                    this.addFocusRight = false;
+
+                    this.$rightArrow.focus();
+
+                } else if (this.addFocusLeft) {
+
+                    this.addFocusLeft = false;
+
+                    this.$leftArrow.focus();
+                }
+            }.bind(this), this.mjGallery);
+        },
+
+        onFocus = function (event) {
+
+            var $target = ns.$t(event.target),
+                $item = $target.closest(ns.CLASS.selector("item")),
+
+                focusInNotCurrentItem = $item.length && $item[0] !== this.mjGallery.getCurrentItem().get()[0];
+
+            if (!$target.closest(ns.CLASS.selector("self")).length || focusInNotCurrentItem) {
+
+                var $focusable = this.mjGallery.get().find("a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]");
+
+                $focusable[event.originalEvent.shiftKey ? "last" : "first"]().focus();
+
+                if (focusInNotCurrentItem) {
+
+                    this.mjGallery.resetScroll();
+                }
+
+                return false;
+            }
+        },
+
+        onScroll = function (event) {
+
+            if (this.mjGallery.isOpened()) {
+
+                if (event.type.match(/mouse/i)) {
+
+                    if (this.mjGallery.getCurrentItem().shouldPreserveEvent(ns.EVENTS.SCROLL, event)) {
+
+                        var $content = ns.$t(event.target).closest(ns.CLASS.selector("itemContent")),
+
+                            onContent = !!$content.length;
+
+                        if (!onContent) {
+
+                            moveByMouseWheel.call(this, event);
+                        }
+
+                        return onContent;
+                    }
+
+                    moveByMouseWheel.call(this, event);
+                }
+
+                return false;
+            }
+        },
+
+        onZoom = function (event) {
+
+            this.$zoomBtn[event.zoomedIn ? "addClass" : "removeClass"](ns.CLASS.btnToggleZoomActive);
+        },
+
+        initEvents = function () {
+
+            //zakázat posouvání stránky na infoControlleru (nahoře)
+            this.infoController.get().on(this.mjGallery.withNS("touchmove." + NS), function () {
+
+                return false;
+            });
+
+            //zakázat posouvání stránky na infoControlleru (dole)
+            this.infoController.$itemInfo.on(this.mjGallery.withNS("touchmove." + NS), function () {
+
+                return false;
+            });
+
+            //ovládání klávesnicí
+            ns.$win.on(this.mjGallery.withNS("keyup." + NS), onKeyup.bind(this));
+            ns.$win.on(this.mjGallery.withNS("keydown." + NS), onKeydown.bind(this));
+
+            //zakázat posouvání stránky myší + ovládání kolečkem
+            ns.$win.on(this.mjGallery.withNS("scroll." + NS, "DOMMouseScroll." + NS, "mousewheel." + NS), onScroll.bind(this));
+
+            //zrušit předchozí informaci o posunu myší/prstem
+            ns.$win.on(this.mjGallery.withNS("touchstart." + NS, "mousedown." + NS), function () {
+
+                pointerMovedOnOverlay = false;
+
+            }.bind(this));
+
+            //zachovat focus v galerii
+            ns.$win.on(this.mjGallery.withNS("focusin." + NS), onFocus.bind(this));
+
+            var itemViewZoomSelector = [ns.CLASS.selector("zoom"), ns.CLASS.selector("view"), ns.CLASS.selector("item"), ns.CLASS.selector("html")].join(",");
+
+            //zavřít tapnutím na overlay (ve skutečnosti na item nebo view)
+            this.mjGallery.get().on(
+                this.mjGallery.withNS("click." + NS, "touchend." + NS, "touchmove." + NS, "mousemove." + NS), itemViewZoomSelector, onOverlay.bind(this)
+            );
+
+            //ovládání tlačítky
+            this.mjGallery.get().on(
+                this.mjGallery.withNS("click." + NS, "touchend." + NS), tapOnBtn.bind(this)
+            );
+
+            //zakázat posouvání stránky na UIControlleru
+            this.$self.on(this.mjGallery.withNS("touchmove." + NS), function () {
+
+                pointerMovedOnBtn = true;
+
+                return false;
+            });
+
+            //zakázat spuštění akce při posunu
+            this.mjGallery.get().on(this.mjGallery.withNS("touchmove." + NS), ns.DATA.selector("action"), function () {
+
+                pointerMovedOnBtn = true;
+            });
+
+            if (!this.internalEventsRegistred) {
+
+                this.internalEventsRegistred = true;
+
+                ns.EVENT.on(ns.EVENT.afterOpen, initFocus.bind(this), this.mjGallery);
+
+                ns.EVENT.on(ns.EVENT.zoom, onZoom.bind(this), this.mjGallery);
+            }
+
+            if (!this.rightArrow && !this.leftArrow) {
+
+                this.$closeBtn.focus();
+            }
+        },
+
+        destroyEvents = function () {
+
+            //zakázat posouvání stránky na infoControlleru (nahoře)
+            this.infoController.get().off(this.mjGallery.withNS("touchmove." + NS));
+
+            //zakázat posouvání stránky na infoControlleru (dole)
+            this.infoController.$itemInfo.off(this.mjGallery.withNS("touchmove." + NS));
+
+            //focus
+            //ovládání klávesnicí
+            //zakázat posouvání stránky myší + ovládání kolečkem
+            //zrušit předchozí informaci o posunu myší/prstem
+            ns.$win.off(this.mjGallery.withNS("focusin." + NS, "scroll." + NS, "DOMMouseScroll." + NS, "mousewheel." + NS, "touchstart." + NS, "mousedown." + NS, "keyup." + NS, "keydown." + NS));
+
+            //zavřít tapnutím na overlay (ve skutečnosti na item nebo view)
+            //ovládání tlačítky
+            this.mjGallery.get().off(this.mjGallery.withNS("click." + NS, "touchend." + NS, "touchmove." + NS, "mousemove." + NS));
+        },
+
+        disableLeftArrow = function (init) {
+
+            this.$leftArrow.addClass(ns.CLASS.arrowHidden)
+                .blur();
+
+            this.addFocusRight = !init;
+
+            this.leftArrow = false;
+        },
+
+        enableLeftArrow = function () {
+
+            this.$leftArrow.removeClass(ns.CLASS.arrowHidden);
+
+            this.leftArrow = true;
+        },
+
+        disableRightArrow = function (init) {
+
+            this.$rightArrow.addClass(ns.CLASS.arrowHidden)
+                .blur();
+
+            this.addFocusLeft = !init;
+
+            this.rightArrow = false;
+        },
+
+        enableRightArrow = function () {
+
+            this.$rightArrow.removeClass(ns.CLASS.arrowHidden);
+
+            this.rightArrow = true;
+        },
+
+        showRepeatOnLeftArrow = function () {
+
+            this.$leftArrow.addClass(ns.CLASS.arrowRepeat);
+
+            this.leftArrowRepeat = true;
+        },
+
+        showRepeatOnRightArrow = function () {
+
+            this.$rightArrow.addClass(ns.CLASS.arrowRepeat);
+
+            this.rightArrowRepeat = true;
+        },
+
+        hideRepeatOnRightArrow = function () {
+
+            this.$rightArrow.removeClass(ns.CLASS.arrowRepeat);
+
+            this.rightArrowRepeat = false;
+        },
+
+        hideRepeatOnLeftArrow = function () {
+
+            this.$leftArrow.removeClass(ns.CLASS.arrowRepeat);
+
+            this.leftArrowRepeat = false;
+        },
+
+        initArrows = function () {
+
+            var totalCount = this.mjGallery.getTotalCount(),
+                currentIndex = this.mjGallery.getCurrentIndex();
+
+            if (totalCount === 1) {
+
+                disableLeftArrow.call(this, true);
+                disableRightArrow.call(this, true);
+
+            } else if (totalCount === 2) {
+
+                if (currentIndex === 0) {
+
+                    disableLeftArrow.call(this, true);
+                    enableRightArrow.call(this, true);
+
+                } else {
+
+                    disableRightArrow.call(this, true);
+                    enableLeftArrow.call(this, true);
+                }
+            } else {
+
+                if (currentIndex === 0) {
+
+                    showRepeatOnLeftArrow.call(this);
+
+                } else if (currentIndex + 1 === totalCount) {
+
+                    showRepeatOnRightArrow.call(this);
+
+                } else {
+
+                    hideRepeatOnRightArrow.call(this);
+                    hideRepeatOnLeftArrow.call(this);
+                }
+            }
+        },
+
+        toggleZoomBtn = function () {
+
+            this.$zoomBtn[this.mjGallery.getCurrentItem().isZoomable() ? "removeClass": "addClass"](ns.CLASS.btnHidden);
+        },
+
+        toggleInfoBtn = function () {
+
+            this.$infoBtn[this.infoController.hasInfo() ? "removeClass": "addClass"](ns.CLASS.btnHidden);
+        },
+
+        onBeforeOpen = function () {
+
+            toggleInfoBtn.call(this);
+            toggleZoomBtn.call(this);
+
+            initArrows.call(this);
+        },
+
+        onBeforeChange = function () {
+
+            clearTimeout(this.addFocusToIframeTimeout);
+        },
+
+        onAfterChange = function () {
+
+            var $iframe = this.mjGallery.getCurrentItem().getIframe();
+
+            if ($iframe && $iframe.length) {
+
+                this.addFocusToIframeTimeout = setTimeout(function() {
+
+                    $iframe.focus();
+
+                }.bind(this), 0);
+            }
+        },
+
+        onChange = function (event) {
+
+            var totalCount = this.mjGallery.getTotalCount();
+
+            toggleInfoBtn.call(this);
+            toggleZoomBtn.call(this);
+
+            if (totalCount === 2) {
+
+                if (!event.prev) {
+
+                    enableRightArrow.call(this);
+                    disableLeftArrow.call(this);
+
+                } else if (!event.next) {
+
+                    enableLeftArrow.call(this);
+                    disableRightArrow.call(this);
+
+                    //pro jistotu
+                } else {
+
+                    enableRightArrow.call(this);
+                    enableLeftArrow.call(this);
+                }
+
+            } else if (totalCount > 2) {
+
+                if (event.currentIndex === 0) {
+
+                    showRepeatOnLeftArrow.call(this);
+                    hideRepeatOnRightArrow.call(this);
+
+                } else if (event.currentIndex + 1 === totalCount) {
+
+                    hideRepeatOnLeftArrow.call(this);
+                    showRepeatOnRightArrow.call(this);
+
+                } else {
+
+                    hideRepeatOnLeftArrow.call(this);
+                    hideRepeatOnRightArrow.call(this);
+                }
+            }
+        };
+
+
+    var UIController = ns.UIController = function UIController(mjGallery, infoController) {
+
+            this.internalEventsRegistred = false;
+
+            this.mjGallery = mjGallery;
+
+            this.infoController = infoController;
+
+            this.$self = this.mjGallery.get().find(ns.CLASS.selector("controller"));
+
+            this.$closeBtn = this.mjGallery.get().find(ns.CLASS.selector("btnClose"));
+            this.$zoomBtn = this.mjGallery.get().find(ns.CLASS.selector("btnToggleZoom"));
+            this.$fullscreenBtn = this.mjGallery.get().find(ns.CLASS.selector("btnFullscreen"));
+            this.$infoBtn = this.mjGallery.get().find(ns.CLASS.selector("btnToggleInfo"));
+
+            this.$leftArrow = this.$self.find(ns.CLASS.selector("arrowLeft"));
+            this.$rightArrow = this.$self.find(ns.CLASS.selector("arrowRight"));
+
+            this.leftArrow = this.rightArrow = true;
+
+            ns.EVENT.on(ns.EVENT.beforeOpen, onBeforeOpen.bind(this), mjGallery);
+
+            ns.EVENT.on(ns.EVENT.beforeChange, onBeforeChange.bind(this), this.mjGallery);
+            ns.EVENT.on(ns.EVENT.change, onChange.bind(this), this.mjGallery);
+            ns.EVENT.on(ns.EVENT.afterChange, onAfterChange.bind(this), this.mjGallery);
+
+            ns.EVENT.on(ns.EVENT.open, initEvents.bind(this), this.mjGallery);
+            ns.EVENT.on(ns.EVENT.beforeClose, destroyEvents.bind(this), this.mjGallery);
+            ns.EVENT.on(ns.EVENT.beforeDestroy, destroyEvents.bind(this), this.mjGallery);
+        };
+
+
+    UIController.prototype.fullscreen = function (state) {
+
+        if (this.mjGallery.get() && ns.SUPPORTS_FULLSCREEN) {
+
+            if (!this.$fullscreenBtn.hasClass(ns.CLASS.btnFullscreenActive) && state !== false) {
+
+                this.mjGallery.get()[0][ns.REQUEST_FULLSCREEN_FN]();
+
+                this.$fullscreenBtn.addClass(ns.CLASS.btnFullscreenActive);
+
+            } else if (document[ns.EXIT_FULLSCREEN_FN] && state !== true) {
+
+                document[ns.EXIT_FULLSCREEN_FN]();
+
+                this.$fullscreenBtn.removeClass(ns.CLASS.btnFullscreenActive);
+            }
+        }
+
+        return this;
+    };
+
+    UIController.prototype.toggleInfo = function () {
+
+        this.infoController.toggleInfo();
+
+        return this;
+    };
+
+    UIController.prototype.showInfo = function () {
+
+        this.infoController.showInfo();
+
+        return this;
+    };
+
+    UIController.prototype.hideInfo = function () {
+
+        this.infoController.hideInfo();
+
+        return this;
+    };
+
+
+}(window.mjGallery, jQuery));
