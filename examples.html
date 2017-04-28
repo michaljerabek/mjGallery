@@ -522,7 +522,7 @@ $(window).on("orientationchange", function () {
 
     <div class="example8__buttons buttons buttons--left">
 
-        <button type="button" class="example8__button button" data-mjg-title="Loading current weather in Prague..." data-mjg-description="Weather service doesn't work with https...">Current Weather</button>
+        <button type="button" class="example8__button button" data-mjg-title="Loading current weather in Prague" data-mjg-description="Please wait...">Current Weather</button>
         <!-- Data-mjg-method="generate" and data-mjg-type="html" are not necessary, because there is no data-mjg-src or href and function for generating the content is in options. -->
 
     </div>
@@ -557,7 +557,7 @@ $(window).on("orientationchange", function () {
             selector: ".example8__button", //items
             html: function (done, item) { //generates the html content
 
-                var req = $.get("http://api.openweathermap.org/data/2.5/weather?q=Prague&units=metric&APPID=699e0132d2f7e3fea7a91128af7959e1");
+                var req = $.get("https://crossorigin.me/http://api.openweathermap.org/data/2.5/weather?q=Prague&units=metric&APPID=699e0132d2f7e3fea7a91128af7959e1");
 
                 req.done(function (result) {
 
