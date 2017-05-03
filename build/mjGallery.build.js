@@ -942,12 +942,14 @@
 
             this.resetScroll();
 
-            var focusable = ns.$t(event.target).is("a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]");
+            var onFocusable = ns.$t(event.target).is("a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]");
 
-            if (!focusable) {
+            if (onFocusable) {
 
-                event.preventDefault();
+                ns.$t(event.target).focus();
             }
+
+            event.preventDefault();
         },
 
         onOpenGalleryByUser = function (event, pointerMoved) {
@@ -5815,6 +5817,18 @@
         return this.setOpacity("", duration);
     };
 
+    Item.prototype.removeFocus = function () {
+
+        var $focused = this.$self.find(":focus");
+
+        if ($focused.length) {
+
+            $focused.blur();
+        }
+
+        return this;
+    };
+
     Item.prototype.setAsCurrent = function (duration, done) {
 
         this.prev = false;
@@ -5867,6 +5881,8 @@
             this.zoom(1, undefined, duration, true);
         }
 
+        this.removeFocus();
+
         if (duration) {
 
             if (ns.USE_TRANSITIONS) {
@@ -5914,6 +5930,8 @@
 
             this.zoom(1, undefined, duration, true);
         }
+
+        this.removeFocus();
 
         if (duration) {
 
