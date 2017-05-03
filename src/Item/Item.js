@@ -800,6 +800,18 @@
         return this.setOpacity("", duration);
     };
 
+    Item.prototype.removeFocus = function () {
+
+        var $focused = this.$self.find(":focus");
+
+        if ($focused.length) {
+
+            $focused.blur();
+        }
+
+        return this;
+    };
+
     Item.prototype.setAsCurrent = function (duration, done) {
 
         this.prev = false;
@@ -852,6 +864,8 @@
             this.zoom(1, undefined, duration, true);
         }
 
+        this.removeFocus();
+
         if (duration) {
 
             if (ns.USE_TRANSITIONS) {
@@ -899,6 +913,8 @@
 
             this.zoom(1, undefined, duration, true);
         }
+
+        this.removeFocus();
 
         if (duration) {
 

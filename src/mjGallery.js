@@ -942,12 +942,14 @@
 
             this.resetScroll();
 
-            var focusable = ns.$t(event.target).is("a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]");
+            var onFocusable = ns.$t(event.target).is("a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]");
 
-            if (!focusable) {
+            if (onFocusable) {
 
-                event.preventDefault();
+                ns.$t(event.target).focus();
             }
+
+            event.preventDefault();
         },
 
         onOpenGalleryByUser = function (event, pointerMoved) {

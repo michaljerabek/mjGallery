@@ -5,17 +5,16 @@
 
     var NS = "UIController",
 
-        pointerMovedOnOverlay = false,
         pointerMovedOnBtn = false,
 
         onOverlay = function (event) {
 
             var onOverlay = this.mjGallery.getCurrentItem().considerEventAsOnOverlay(event);
 
-            //(1) při psunutí myši/prstu nezavírat
+            //při psunutí myši/prstu nezavírat
             if (event.type.match(/move/) && onOverlay) {
 
-                pointerMovedOnOverlay = true;
+                this.mjGallery.get().off(this.mjGallery.withNS(".onOverlay" + NS));
 
                 //uživatel posouvá obrázkem => zachovat události
                 if (this.mjGallery.eventsActive) {
@@ -24,12 +23,6 @@
                 }
 
                 return false;
-            }
-
-            //(2) při psunutí myši/prstu nezavírat
-            if (pointerMovedOnOverlay) {
-
-                return;
             }
 
             if (onOverlay && !event.type.match(/move/)) {
@@ -44,7 +37,7 @@
             }
         },
 
-        tapOnBtn = function (event) {
+        tapOnAction = function (event) {
 
             if (pointerMovedOnBtn || this.mjGallery.ignoreEvents || (event.type.match(/touch/) && event.originalEvent.touches.length)) {
 
@@ -332,23 +325,22 @@
             //zrušit předchozí informaci o posunu myší/prstem
             ns.$win.on(this.mjGallery.withNS("touchstart." + NS, "mousedown." + NS), function () {
 
-                pointerMovedOnOverlay = false;
+                var itemViewZoomSelector = [ns.CLASS.selector("zoom"), ns.CLASS.selector("view"), ns.CLASS.selector("item"), ns.CLASS.selector("html")].join(",");
+
+                //zavřít tapnutím na overlay (ve skutečnosti na item nebo view)
+                this.mjGallery.get().off(this.mjGallery.withNS(".onOverlay" + NS))
+                    .one(
+                        this.mjGallery.withNS("click.onOverlay" + NS, "touchend.onOverlay" + NS, "touchmove.onOverlay" + NS, "mousemove.onOverlay" + NS), itemViewZoomSelector, onOverlay.bind(this)
+                    );
 
             }.bind(this));
 
             //zachovat focus v galerii
             ns.$win.on(this.mjGallery.withNS("focusin." + NS), onFocus.bind(this));
 
-            var itemViewZoomSelector = [ns.CLASS.selector("zoom"), ns.CLASS.selector("view"), ns.CLASS.selector("item"), ns.CLASS.selector("html")].join(",");
-
-            //zavřít tapnutím na overlay (ve skutečnosti na item nebo view)
-            this.mjGallery.get().on(
-                this.mjGallery.withNS("click." + NS, "touchend." + NS, "touchmove." + NS, "mousemove." + NS), itemViewZoomSelector, onOverlay.bind(this)
-            );
-
             //ovládání tlačítky
             this.mjGallery.get().on(
-                this.mjGallery.withNS("click." + NS, "touchend." + NS), tapOnBtn.bind(this)
+                this.mjGallery.withNS("click." + NS, "touchend." + NS), tapOnAction.bind(this)
             );
 
             //zakázat posouvání stránky na UIControlleru

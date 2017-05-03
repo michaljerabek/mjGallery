@@ -371,8 +371,9 @@ code {
 }
 
 .example7__content-wrapper {
-    max-height: calc(85vh - 64px);
+    max-height: calc(85vh - 32px);
     padding: 32px;
+    padding-bottom: 0;
 
     overflow: auto;
 }
@@ -387,6 +388,10 @@ code {
 
 .example7__content-wrapper > * + h3 {
     margin-top: 32px;
+}
+
+.example7__content-wrapper > :last-child {
+    margin-bottom: 32px;
 }
 
 .example7__form {
