@@ -6137,7 +6137,7 @@
 
             onTextInput = ns.$t(event.target).is("input:not([disabled], [type='submit'], [type='checkbox'], [type='radio']), textarea:not([disabled]), *[contenteditable]");
 
-        if ((type === ns.EVENTS.POINTER || type === ns.EVENTS.KEYS) && onTextInput) {
+        if (((type === ns.EVENTS.POINTER && (!/touch/.test(event.type) || ns.$t(event.target).is(":focus"))) || type === ns.EVENTS.KEYS) && onTextInput) {
 
             return true;
         }
