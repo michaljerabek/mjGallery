@@ -724,6 +724,11 @@
             this.itemDirFix = false;
             this.zoomMode = false;
 
+            if (this.focusOnEnd) {
+
+                ns.$t(this.focusOnEnd).focus();
+            }
+
             if (!this.currentItem.isZoomable() || !this.pointer.isMouse()) {
 
                 return;
@@ -899,6 +904,8 @@
 
         onItemStart = function (event) {
 
+            this.focusOnEnd = false;
+
             if (this.currentItem.shouldPreserveEvent(ns.EVENTS.POINTER, event)) {
 
                 return;
@@ -946,7 +953,12 @@
 
             if (onFocusable) {
 
-                ns.$t(event.target).focus();
+                this.focusOnEnd = event.type.match(/touch/) ? event.target: null;
+
+                if (!this.focusOnEnd) {
+
+                    ns.$t(event.target).focus();
+                }
             }
 
             event.preventDefault();
