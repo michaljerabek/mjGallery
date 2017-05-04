@@ -87,7 +87,14 @@
 
         var events = this.getOption("events") || "",
 
-            onWrapper = !!ns.$t(event.target).closest(ns.CLASS.selector("itemHtmlContentWrapper")).length,
+            onTextInput = ns.$t(event.target).is("input:not([disabled], [type='submit'], [type='checkbox'], [type='radio']), textarea:not([disabled]), *[contenteditable]");
+
+        if ((type === ns.EVENTS.POINTER || type === ns.EVENTS.KEYS) && onTextInput) {
+
+            return true;
+        }
+
+        var onWrapper = !!ns.$t(event.target).closest(ns.CLASS.selector("itemHtmlContentWrapper")).length,
 
             $scrollable = ns.$t(event.target).closest(ns.DATA.selector("scrollable", true)),
 
