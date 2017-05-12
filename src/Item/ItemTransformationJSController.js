@@ -205,7 +205,6 @@
         return this;
     };
 
-
     ItemTransformationJSController.prototype.edgeAnim = function (dir, done) {
 
         if (!this.item.isCurrent()) {

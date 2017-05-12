@@ -7,7 +7,7 @@
 
             if (this.constructor === ns.ItemTransformationController) {
 
-                throw "ItemTransformationController is an abstract class. Use subtype instead!";
+                throw "ItemTransformationController is an abstract class!";
             }
 
             this.mjGallery = mjGallery;
@@ -64,7 +64,7 @@
 
     ItemTransformationController.prototype.fitZoom = function (/*done*/) {
 
-        throw "fitZoom method must be implemented!";
+        throw "Implement fitZoom!";
     };
 
     ItemTransformationController.prototype.calcFitZoomTranslate = function () {
@@ -176,7 +176,7 @@
 
     ItemTransformationController.prototype.zoomAnim = function (/*CSS, zoom, duration, translate, endTranslate, done*/) {
 
-        throw "zoomAnim method must be implemented!";
+        throw "Implement zoomAnim!";
     };
 
     ItemTransformationController.prototype.zoom = function (zoom, origin, animate, fit, done) {
@@ -524,17 +524,17 @@
 
     ItemTransformationController.prototype.clearTransform = function (/*duration, done*/) {
 
-        throw "clearTransform method must be implemented!";
+        throw "Implement clearTransform!";
     };
 
     ItemTransformationController.prototype.edgeAnim = function (/*dir, done*/) {
 
-        throw "edgeAnim method must be implemented!";
+        throw "Implement edgeAnim!";
     };
 
     ItemTransformationController.prototype.closeAnim = function (/*duration, dir, translate, scale*/) {
 
-        throw "closeAnim method must be implemented!";
+        throw "Implement closeAnim!";
     };
 
     ItemTransformationController.prototype.getTranslate = function () {
