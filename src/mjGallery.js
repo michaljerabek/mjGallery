@@ -914,14 +914,7 @@
             this.pointer.onStart(event);
 
             //probíhá animace nebo už jsou události move a up/end zaregistrované (aby se při více dotecích nespouštěly vícekrát)
-            if (this.ignoreEvents || this.eventsActive) {
-
-                event.preventDefault();
-
-                return;
-            }
-
-            if (this.pointer.count > 2) {
+            if (this.ignoreEvents || this.eventsActive || this.pointer.count > 2) {
 
                 event.preventDefault();
 

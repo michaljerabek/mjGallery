@@ -914,14 +914,7 @@
             this.pointer.onStart(event);
 
             //probíhá animace nebo už jsou události move a up/end zaregistrované (aby se při více dotecích nespouštěly vícekrát)
-            if (this.ignoreEvents || this.eventsActive) {
-
-                event.preventDefault();
-
-                return;
-            }
-
-            if (this.pointer.count > 2) {
+            if (this.ignoreEvents || this.eventsActive || this.pointer.count > 2) {
 
                 event.preventDefault();
 
@@ -3559,15 +3552,27 @@
 
             this.pinch.prev = 0;
 
-            this.pinch.start[0].x = XY.x;
-            this.pinch.start[0].y = XY.y;
-            this.pinch.start[1].x = XY2.x;
-            this.pinch.start[1].y = XY2.y;
+            this.pinch.start = {
+                0: {
+                    x: XY.x,
+                    y: XY.y
+                },
+                1: {
+                    x: XY2.x,
+                    y: XY2.y
+                }
+            };
 
-            this.pinch.current[0].x = XY.x;
-            this.pinch.current[0].y = XY.y;
-            this.pinch.current[1].x = XY2.x;
-            this.pinch.current[1].y = XY2.y;
+            this.pinch.current = {
+                0: {
+                    x: XY.x,
+                    y: XY.y
+                },
+                1: {
+                    x: XY2.x,
+                    y: XY2.y
+                }
+            };
 
             this.pinch.startDist = this.pinch._prev;
         }
@@ -3619,10 +3624,16 @@
 
             this.pinch.startDiff = this.pinch.dist - Math.sqrt(Math.pow(this.pinch.start[1].x - this.pinch.start[0].x, 2) + Math.pow(this.pinch.start[1].y - this.pinch.start[0].y, 2));
 
-            this.pinch.current[0].x = XY.x;
-            this.pinch.current[0].y = XY.y;
-            this.pinch.current[1].x = XY2.x;
-            this.pinch.current[1].y = XY2.y;
+            this.pinch.current = {
+                0: {
+                    x: XY.x,
+                    y: XY.y
+                },
+                1: {
+                    x: XY2.x,
+                    y: XY2.y
+                }
+            };
 
             this.pinch._prev = this.pinch.dist;
         }
