@@ -25,11 +25,11 @@
             ].join("");
         },
 
-        HTMLItem = ns.HTMLItem = function HTMLItem($source, mjGallery, index, preload) {
+        HTMLItem = ns.HTMLItem = function HTMLItem($source, mjGallery, index) {
 
             this.type = ns.Item.TYPE.HTML;
 
-            ns.Item.call(this, $source, mjGallery, index, preload, HTMLAPI);
+            ns.Item.call(this, $source, mjGallery, index, HTMLAPI);
         };
 
     ns.Item.extend("HTML", "html", HTMLItem, function (src, type) {
@@ -61,7 +61,7 @@
 
     HTMLItem.prototype.getIframe = function () {
 
-        if (this.iframe) {
+        if (this.$iframe) {
 
             return this.$iframe;
         }
@@ -183,16 +183,11 @@
 
     HTMLItem.prototype.getMethod = function () {
 
-        if (typeof this.method !== "undefined") {
+        var method = this.$source.data(ns.DATA.method) || this.mjGallery.getOption(ns.OPTIONS.HTML_GENERATE_METHOD);
 
-            return this.method;
-        }
+        method = method ? method.toLowerCase() : this.getSrcAttr() ? HTMLItem.METHOD.APPEND : HTMLItem.METHOD.GENERATE;
 
-        this.method = this.$source.data(ns.DATA.method) || this.mjGallery.getOption(ns.OPTIONS.HTML_GENERATE_METHOD);
-
-        this.method = this.method ? this.method.toLowerCase() : this.getSrcAttr() ? HTMLItem.METHOD.APPEND : HTMLItem.METHOD.GENERATE;
-
-        return this.method;
+        return method;
     };
 
     HTMLItem.prototype.appendContent = function (content) {

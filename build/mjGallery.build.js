@@ -2479,94 +2479,63 @@
 
         ICON: {
 
-            CLOSE: function () {
+            SVG: function (content) {
 
                 return [
                     "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\">",
-                        "<path d=\"M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z\"/>",
+                        content,
                     "</svg>"
                 ].join("");
+            },
+
+            CLOSE: function () {
+
+                return ns.TEMPLATE.ICON.SVG("<path d=\"M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z\"/>");
             },
 
             ZOOM_IN: function () {
 
-                return [
-                    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\">",
-                        "<path d=\"M13 10h-3v3h-2v-3h-3v-2h3v-3h2v3h3v2zm8.172 14l-7.387-7.387c-1.388.874-3.024 1.387-4.785 1.387-4.971 0-9-4.029-9-9s4.029-9 9-9 9 4.029 9 9c0 1.761-.514 3.398-1.387 4.785l7.387 7.387-2.828 2.828zm-12.172-8c3.859 0 7-3.14 7-7s-3.141-7-7-7-7 3.14-7 7 3.141 7 7 7z\"/>",
-                    "</svg>"
-                ].join("");
+                return ns.TEMPLATE.ICON.SVG("<path d=\"M13 10h-3v3h-2v-3h-3v-2h3v-3h2v3h3v2zm8.172 14l-7.387-7.387c-1.388.874-3.024 1.387-4.785 1.387-4.971 0-9-4.029-9-9s4.029-9 9-9 9 4.029 9 9c0 1.761-.514 3.398-1.387 4.785l7.387 7.387-2.828 2.828zm-12.172-8c3.859 0 7-3.14 7-7s-3.141-7-7-7-7 3.14-7 7 3.141 7 7 7z\"/>");
             },
 
             ZOOM_OUT: function () {
 
-                return [
-                    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\">",
-                        "<path d=\"M13 10h-8v-2h8v2zm8.172 14l-7.387-7.387c-1.388.874-3.024 1.387-4.785 1.387-4.971 0-9-4.029-9-9s4.029-9 9-9 9 4.029 9 9c0 1.761-.514 3.398-1.387 4.785l7.387 7.387-2.828 2.828zm-12.172-8c3.859 0 7-3.14 7-7s-3.141-7-7-7-7 3.14-7 7 3.141 7 7 7z\"/>",
-                    "</svg>"
-                ].join("");
+                return ns.TEMPLATE.ICON.SVG("<path d=\"M13 10h-8v-2h8v2zm8.172 14l-7.387-7.387c-1.388.874-3.024 1.387-4.785 1.387-4.971 0-9-4.029-9-9s4.029-9 9-9 9 4.029 9 9c0 1.761-.514 3.398-1.387 4.785l7.387 7.387-2.828 2.828zm-12.172-8c3.859 0 7-3.14 7-7s-3.141-7-7-7-7 3.14-7 7 3.141 7 7 7z\"/>");
             },
 
             INFO: function () {
 
-                return [
-                    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\">",
-                        "<path d=\"M24 17.981h-13l-7 5.02v-5.02h-4v-16.981h24v16.981zm-2-14.981h-20v12.981h4v3.125l4.357-3.125h11.643v-12.981zm-9 6.001v5h-2v-5h2zm-1-1.5c.69 0 1.25-.56 1.25-1.25s-.56-1.25-1.25-1.25-1.25.56-1.25 1.25.56 1.25 1.25 1.25z\"/>",
-                    "</svg>"
-                ].join("");
+                return ns.TEMPLATE.ICON.SVG("<path d=\"M24 17.981h-13l-7 5.02v-5.02h-4v-16.981h24v16.981zm-2-14.981h-20v12.981h4v3.125l4.357-3.125h11.643v-12.981zm-9 6.001v5h-2v-5h2zm-1-1.5c.69 0 1.25-.56 1.25-1.25s-.56-1.25-1.25-1.25-1.25.56-1.25 1.25.56 1.25 1.25 1.25z\"/>");
             },
 
             FULLSCREEN_ON: function () {
 
-                return [
-                    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\">",
-                        "<path d=\"M24 9h-2v-4h-4v-2h6v6zm-6 12v-2h4v-4h2v6h-6zm-18-6h2v4h4v2h-6v-6zm6-12v2h-4v4h-2v-6h6z\"/>",
-                    "</svg>"
-                ].join("");
+                return ns.TEMPLATE.ICON.SVG("<path d=\"M24 9h-2v-4h-4v-2h6v6zm-6 12v-2h4v-4h2v6h-6zm-18-6h2v4h4v2h-6v-6zm6-12v2h-4v4h-2v-6h6z\"/>");
             },
 
             FULLSCREEN_OFF: function () {
 
-                return [
-                    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\">",
-                        "<path d=\"M18 3h2v4h4v2h-6v-6zm6 12v2h-4v4h-2v-6h6zm-18 6h-2v-4h-4v-2h6v6zm-6-12v-2h4v-4h2v6h-6z\"/>",
-                    "</svg>"
-                ].join("");
+                return ns.TEMPLATE.ICON.SVG("<path d=\"M18 3h2v4h4v2h-6v-6zm6 12v2h-4v4h-2v-6h6zm-18 6h-2v-4h-4v-2h6v6zm-6-12v-2h4v-4h2v6h-6z\"/>");
             },
 
             ARROW_LEFT: function () {
 
-                return [
-                    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\">",
-                        "<path d=\"M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z\"/>",
-                    "</svg>"
-                ].join("");
+                return ns.TEMPLATE.ICON.SVG("<path d=\"M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z\"/>");
             },
 
             ARROW_RIGHT: function () {
 
-                return [
-                    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\">",
-                        "<path d=\"M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z\"/>",
-                    "</svg>"
-                ].join("");
+                return ns.TEMPLATE.ICON.SVG("<path d=\"M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z\"/>");
             },
 
             ARROW_START: function () {
 
-                return [
-                    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\">",
-                        "<path d=\"M18.885 3.515c-4.617-4.618-12.056-4.676-16.756-.195l-2.129-2.258v7.938h7.484l-2.066-2.191c2.82-2.706 7.297-2.676 10.073.1 4.341 4.341 1.737 12.291-5.491 12.291v4.8c3.708 0 6.614-1.244 8.885-3.515 4.686-4.686 4.686-12.284 0-16.97z\"/>",
-                    "</svg>"
-                ].join("");
+                return ns.TEMPLATE.ICON.SVG("<path d=\"M18.885 3.515c-4.617-4.618-12.056-4.676-16.756-.195l-2.129-2.258v7.938h7.484l-2.066-2.191c2.82-2.706 7.297-2.676 10.073.1 4.341 4.341 1.737 12.291-5.491 12.291v4.8c3.708 0 6.614-1.244 8.885-3.515 4.686-4.686 4.686-12.284 0-16.97z\"/>");
             },
 
             ARROW_END: function () {
 
-                return [
-                    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\">",
-                        "<path d=\"M5.115 3.515c4.617-4.618 12.056-4.676 16.756-.195l2.129-2.258v7.938h-7.484l2.066-2.191c-2.82-2.706-7.297-2.676-10.073.1-4.341 4.341-1.737 12.291 5.491 12.291v4.8c-3.708 0-6.614-1.244-8.885-3.515-4.686-4.686-4.686-12.284 0-16.97z\"/>",
-                    "</svg>"
-                ].join("");
+                return ns.TEMPLATE.ICON.SVG("<path d=\"M5.115 3.515c4.617-4.618 12.056-4.676 16.756-.195l2.129-2.258v7.938h-7.484l2.066-2.191c-2.82-2.706-7.297-2.676-10.073.1-4.341 4.341-1.737 12.291 5.491 12.291v4.8c-3.708 0-6.614-1.244-8.885-3.515-4.686-4.686-4.686-12.284 0-16.97z\"/>");
             }
         },
 
@@ -2855,9 +2824,11 @@
 
             this.mjGallery = mjGallery;
 
-            this.$itemInfo = mjGallery.$self.find(ns.CLASS.selector("itemInfo"));
+            this.$mjg = mjGallery.get();
 
-            this.$info = this.mjGallery.get().find(ns.CLASS.selector("info"));
+            this.$itemInfo = this.$mjg.find(ns.CLASS.selector("itemInfo"));
+
+            this.$info = this.$mjg.find(ns.CLASS.selector("info"));
 
             this.current = null;
 
@@ -2950,21 +2921,21 @@
 
     InfoController.prototype.toggleInfo = function () {
 
-        this.mjGallery.get().toggleClass(ns.CLASS.selfInfoActive);
+        this.$mjg.toggleClass(ns.CLASS.selfInfoActive);
 
         return this;
     };
 
     InfoController.prototype.showInfo = function () {
 
-        this.mjGallery.get().addClass(ns.CLASS.selfInfoActive);
+        this.$mjg.addClass(ns.CLASS.selfInfoActive);
 
         return this;
     };
 
     InfoController.prototype.hideInfo = function () {
 
-        this.mjGallery.get().removeClass(ns.CLASS.selfInfoActive);
+        this.$mjg.removeClass(ns.CLASS.selfInfoActive);
 
         return this;
     };
@@ -3864,9 +3835,7 @@
                 return;
             }
 
-            var $target = ns.$t(event.target),
-
-                $btn = $target.closest(ns.DATA.selector("action"));
+            var $btn = ns.$t(event.target).closest(ns.DATA.selector("action"));
 
             if ($btn.length) {
 
@@ -3952,18 +3921,10 @@
                 return;
             }
 
-            //+
-            if (event.which === 107 && currentItem.isZoomable()) {
+            //+-
+            if (~[107, 109].indexOf(event.which) && currentItem.isZoomable()) {
 
-                this.mjGallery.zoomIn();
-
-                return false;
-            }
-
-            //-
-            if (event.which === 109 && currentItem.isZoomable()) {
-
-                this.mjGallery.zoomOut();
+                this.mjGallery[event.which === 107 ? "zoomIn" : "zoomOut"]();
 
                 return false;
             }
@@ -4002,9 +3963,11 @@
 
                 if (this.mjGallery.getCurrentItem().isZoomedIn()) {
 
+                    var step = ns.TRANTSLATE_ZOOM_STEP;
+
                     this.mjGallery.getCurrentItem().translateZoomBy([
-                        event.which === 37 ? ns.TRANTSLATE_ZOOM_STEP : event.which === 39 ? -ns.TRANTSLATE_ZOOM_STEP : 0,
-                        event.which === 38 ? ns.TRANTSLATE_ZOOM_STEP : event.which === 40 ? -ns.TRANTSLATE_ZOOM_STEP : 0
+                        event.which === 37 ? step : event.which === 39 ? -step : 0,
+                        event.which === 38 ? step : event.which === 40 ? -step : 0
                     ], ((1000 / 60) / 1000) * 2);
 
                     this.mjGallery.ignoreEvents = true;
@@ -4207,66 +4170,25 @@
             this.mjGallery.get().off(this.mjGallery.withNS("click." + NS, "touchend." + NS, "touchmove." + NS, "mousemove." + NS));
         },
 
-        disableLeftArrow = function (init) {
+        toggleArrow = function (which, enable, init) {
 
-            this.$leftArrow.addClass(ns.CLASS.arrowHidden)
-                .blur();
+            this["$" + which + "Arrow"][enable ? "removeClass" : "addClass"](ns.CLASS.arrowHidden);
 
-            this.addFocusRight = !init;
+            if (!enable) {
 
-            this.leftArrow = false;
+                this["$" + which + "Arrow"].blur();
+
+                this["addFocus" + (which === "left" ? "Right" : "Left")] = !init;
+            }
+
+            this[which + "Arrow"] = enable;
         },
 
-        enableLeftArrow = function () {
+        toggleRepeatArrow = function (which, show) {
 
-            this.$leftArrow.removeClass(ns.CLASS.arrowHidden);
+            this["$" + which + "Arrow"][show ? "addClass" : "removeClass"](ns.CLASS.arrowRepeat);
 
-            this.leftArrow = true;
-        },
-
-        disableRightArrow = function (init) {
-
-            this.$rightArrow.addClass(ns.CLASS.arrowHidden)
-                .blur();
-
-            this.addFocusLeft = !init;
-
-            this.rightArrow = false;
-        },
-
-        enableRightArrow = function () {
-
-            this.$rightArrow.removeClass(ns.CLASS.arrowHidden);
-
-            this.rightArrow = true;
-        },
-
-        showRepeatOnLeftArrow = function () {
-
-            this.$leftArrow.addClass(ns.CLASS.arrowRepeat);
-
-            this.leftArrowRepeat = true;
-        },
-
-        showRepeatOnRightArrow = function () {
-
-            this.$rightArrow.addClass(ns.CLASS.arrowRepeat);
-
-            this.rightArrowRepeat = true;
-        },
-
-        hideRepeatOnRightArrow = function () {
-
-            this.$rightArrow.removeClass(ns.CLASS.arrowRepeat);
-
-            this.rightArrowRepeat = false;
-        },
-
-        hideRepeatOnLeftArrow = function () {
-
-            this.$leftArrow.removeClass(ns.CLASS.arrowRepeat);
-
-            this.leftArrowRepeat = false;
+            this[which + "ArrowRepeat"] = show;
         },
 
         initArrows = function () {
@@ -4276,36 +4198,18 @@
 
             if (totalCount === 1) {
 
-                disableLeftArrow.call(this, true);
-                disableRightArrow.call(this, true);
+                toggleArrow.call(this, "left", false, true);
+                toggleArrow.call(this, "right", false, true);
 
             } else if (totalCount === 2) {
 
-                if (currentIndex === 0) {
+                toggleArrow.call(this, "left", currentIndex !== 0, true);
+                toggleArrow.call(this, "right", currentIndex === 0, true);
 
-                    disableLeftArrow.call(this, true);
-                    enableRightArrow.call(this, true);
-
-                } else {
-
-                    disableRightArrow.call(this, true);
-                    enableLeftArrow.call(this, true);
-                }
             } else {
 
-                if (currentIndex === 0) {
-
-                    showRepeatOnLeftArrow.call(this);
-
-                } else if (currentIndex + 1 === totalCount) {
-
-                    showRepeatOnRightArrow.call(this);
-
-                } else {
-
-                    hideRepeatOnRightArrow.call(this);
-                    hideRepeatOnLeftArrow.call(this);
-                }
+                toggleRepeatArrow.call(this, "left", currentIndex === 0);
+                toggleRepeatArrow.call(this, "right", currentIndex + 1 === totalCount);
             }
         },
 
@@ -4355,40 +4259,22 @@
 
             if (totalCount === 2) {
 
-                if (!event.prev) {
+                if (!event.prev || !event.next) {
 
-                    enableRightArrow.call(this);
-                    disableLeftArrow.call(this);
+                    toggleArrow.call(this, "right", !event.prev);
+                    toggleArrow.call(this, "left", !!event.prev);
 
-                } else if (!event.next) {
-
-                    enableLeftArrow.call(this);
-                    disableRightArrow.call(this);
-
-                    //pro jistotu
+                //pro jistotu
                 } else {
 
-                    enableRightArrow.call(this);
-                    enableLeftArrow.call(this);
+                    toggleArrow.call(this, "right", true);
+                    toggleArrow.call(this, "left", true);
                 }
 
             } else if (totalCount > 2) {
 
-                if (event.currentIndex === 0) {
-
-                    showRepeatOnLeftArrow.call(this);
-                    hideRepeatOnRightArrow.call(this);
-
-                } else if (event.currentIndex + 1 === totalCount) {
-
-                    hideRepeatOnLeftArrow.call(this);
-                    showRepeatOnRightArrow.call(this);
-
-                } else {
-
-                    hideRepeatOnLeftArrow.call(this);
-                    hideRepeatOnRightArrow.call(this);
-                }
+                toggleRepeatArrow.call(this, "left", event.currentIndex === 0);
+                toggleRepeatArrow.call(this, "right", event.currentIndex + 1 === totalCount);
             }
         };
 
@@ -5059,7 +4945,7 @@
             }
         },
 
-        Item = ns.Item = function Item($source, mjGallery, index, preload, APIClass) {
+        Item = ns.Item = function Item($source, mjGallery, index, APIClass) {
 
             this.mjGallery = mjGallery;
 
@@ -5071,27 +4957,20 @@
 
             this.API = new APIClass(this);
 
-            this.prev = false;
-            this.next = false;
-            this.current = false;
+            this.prev = this.next = this.current = false;
 
             this.zoomable = this.zoomable || false;
             this.zoomValue = 1;
 
             this.generateItem();
 
-            this.transformationController = ns.USE_TRANSITIONS ?
+            this.trfCtrl = ns.USE_TRANSITIONS ?
                 new ns.ItemTransformationCSSController(this, mjGallery) :
                 new ns.ItemTransformationJSController(this, mjGallery);
 
-            if (preload) {
-
-                this.load();
-            }
-
             this.refreshSize();
 
-            this.refreshSize = this.refreshSize.bind(this);
+//            this.refreshSize = this.refreshSize.bind(this); //??
 
             ns.EVENT.on(ns.EVENT.resize, this.refreshSize.bind(this), mjGallery);
         };
@@ -5289,15 +5168,16 @@
 
     Item.prototype.fitZoom = function (/*done*/) {
 
-        this.transformationController.fitZoom.apply(this.transformationController, arguments);
+        this.trfCtrl.fitZoom.apply(this.trfCtrl, arguments);
 
         return this;
     };
+
     Item.prototype.zoom = function (zoom/*, origin, animate, fit, done*/) {
 
         if (typeof zoom !== "undefined") {
 
-            this.transformationController.zoom.apply(this.transformationController, arguments);
+            this.trfCtrl.zoom.apply(this.trfCtrl, arguments);
 
             return this;
         }
@@ -5307,17 +5187,16 @@
 
     Item.prototype.translateZoomBy = function (diff, duration, returnDiff) {
 
-        var returnValue = this.transformationController.translateZoomBy.apply(this.transformationController, arguments);
+        var returnValue = this.trfCtrl.translateZoomBy.apply(this.trfCtrl, arguments);
 
         return returnDiff ? returnValue : this;
     };
 
     Item.prototype.slideZoom = function (/*diff, done*/) {
 
-        this.transformationController.slideZoom.apply(this.transformationController, arguments);
+        this.trfCtrl.slideZoom.apply(this.trfCtrl, arguments);
 
         return this;
-
     };
 
     Item.prototype.getZoom = function () {
@@ -5327,7 +5206,7 @@
 
     Item.prototype.isZoomedIn = function () {
 
-        return this.transformationController.isZoomedIn.apply(this.transformationController, arguments);
+        return this.trfCtrl.isZoomedIn.apply(this.trfCtrl, arguments);
     };
 
     Item.prototype.isZoomable = function () {
@@ -5734,50 +5613,50 @@
 
     Item.prototype.transform = function (/*value, duration*/) {
 
-        this.transformationController.transform.apply(this.transformationController, arguments);
+        this.trfCtrl.transform.apply(this.trfCtrl, arguments);
 
         return this;
     };
 
     Item.prototype.translate = function (/*value, useCurrentScale, duration*/) {
 
-        this.transformationController.translate.apply(this.transformationController, arguments);
+        this.trfCtrl.translate.apply(this.trfCtrl, arguments);
 
         return this;
     };
 
     Item.prototype.translateByState = function (/*value, useCurrentScale, duration*/) {
 
-        this.transformationController.translateByState.apply(this.transformationController, arguments);
+        this.trfCtrl.translateByState.apply(this.trfCtrl, arguments);
 
         return this;
     };
 
     Item.prototype.scale = function (/*value, useCurrentTranslate, duration*/) {
 
-        this.transformationController.scale.apply(this.transformationController, arguments);
+        this.trfCtrl.scale.apply(this.trfCtrl, arguments);
 
         return this;
     };
 
     Item.prototype.getTranslate = function () {
 
-        return this.transformationController.getTranslate.apply(this.transformationController, arguments);
+        return this.trfCtrl.getTranslate.apply(this.trfCtrl, arguments);
     };
 
     Item.prototype.getScale = function () {
 
-        return this.transformationController.getScale.apply(this.transformationController, arguments);
+        return this.trfCtrl.getScale.apply(this.trfCtrl, arguments);
     };
 
     Item.prototype.getZoomScale = function () {
 
-        return this.transformationController.getZoomScale.apply(this.transformationController, arguments);
+        return this.trfCtrl.getZoomScale.apply(this.trfCtrl, arguments);
     };
 
     Item.prototype.clearTransform = function (/*duration, done*/) {
 
-        this.transformationController.clearTransform.apply(this.transformationController, arguments);
+        this.trfCtrl.clearTransform.apply(this.trfCtrl, arguments);
 
         return this;
     };
@@ -5851,7 +5730,7 @@
 
         if (duration) {
 
-            this.transformationController.clearTransform(duration, function () {
+            this.trfCtrl.clearTransform(duration, function () {
 
                 done.call(this);
 
@@ -5861,7 +5740,7 @@
 
             if (ns.USE_TRANSITIONS) {
 
-                this.transformationController.stopTransition();
+                this.trfCtrl.stopTransition();
             }
         }
 
@@ -5902,7 +5781,7 @@
                 this.$self.addClass(ns.CLASS.itemAnim);
             }
 
-            this.transformationController.clearTransform(duration, function () {
+            this.trfCtrl.clearTransform(duration, function () {
 
                 this.$self.removeClass(ns.CLASS.itemAnim);
 
@@ -5919,7 +5798,7 @@
 
             if (ns.USE_TRANSITIONS) {
 
-                this.transformationController.stopTransition();
+                this.trfCtrl.stopTransition();
             }
         }
 
@@ -5952,7 +5831,7 @@
                 this.$self.addClass(ns.CLASS.itemAnim);
             }
 
-            this.transformationController.clearTransform(duration, function () {
+            this.trfCtrl.clearTransform(duration, function () {
 
                 this.$self.removeClass(ns.CLASS.itemAnim);
 
@@ -5969,7 +5848,7 @@
 
             if (ns.USE_TRANSITIONS) {
 
-                this.transformationController.stopTransition();
+                this.trfCtrl.stopTransition();
             }
         }
 
@@ -5986,7 +5865,7 @@
         this.next = false;
         this.current = false;
 
-        this.transformationController.clearTransform();
+        this.trfCtrl.clearTransform();
 
         this.unsetAsClosing();
 
@@ -6000,7 +5879,7 @@
 
     Item.prototype.setAsClosing = function (/*duration, dir, translate, scale*/) {
 
-        this.transformationController.closeAnim.apply(this.transformationController, arguments);
+        this.trfCtrl.closeAnim.apply(this.trfCtrl, arguments);
 
         return this;
     };
@@ -6027,7 +5906,7 @@
 
     Item.prototype.edgeAnim = function (/*dir, done*/) {
 
-        this.transformationController.edgeAnim.apply(this.transformationController, arguments);
+        this.trfCtrl.edgeAnim.apply(this.trfCtrl, arguments);
 
         return this;
     };
@@ -6085,11 +5964,11 @@
             ].join("");
         },
 
-        HTMLItem = ns.HTMLItem = function HTMLItem($source, mjGallery, index, preload) {
+        HTMLItem = ns.HTMLItem = function HTMLItem($source, mjGallery, index) {
 
             this.type = ns.Item.TYPE.HTML;
 
-            ns.Item.call(this, $source, mjGallery, index, preload, HTMLAPI);
+            ns.Item.call(this, $source, mjGallery, index, HTMLAPI);
         };
 
     ns.Item.extend("HTML", "html", HTMLItem, function (src, type) {
@@ -6312,11 +6191,11 @@
             return "<iframe src=\"" + (data.src || "") + "\" scrolling=\"yes\" frameborder=\"0\" allowfullscreen mozallowfullscreen webkitallowfullscreen class=\"" + ns.CLASS.itemContent + " " + ns.CLASS.draggable + " " + ns.CLASS.iframe + "\"></iframe>";
         },
 
-        IframeItem = ns.IframeItem = function IframeItem($source, mjGallery, index, preload) {
+        IframeItem = ns.IframeItem = function IframeItem($source, mjGallery, index) {
 
             this.type = ns.Item.TYPE.IFRAME;
 
-            ns.Item.call(this, $source, mjGallery, index, preload, IframeAPI);
+            ns.Item.call(this, $source, mjGallery, index, IframeAPI);
         };
 
     ns.Item.extend("IFRAME", "iframe", IframeItem, function (src) {
@@ -6385,13 +6264,13 @@
             return "<img src=\"" + (data.src || "") + "\" srcset=\"" + (data.srcset || "") + "\" sizes=\"" + (data.sizes || "") + "\" alt=\"" + (data.alt || "") + "\" class=\"" + ns.CLASS.itemContent + " " + ns.CLASS.draggable + " " + ns.CLASS.image + "\">";
         },
 
-        ImageItem = ns.ImageItem = function ImageItem($source, mjGallery, index, preload) {
+        ImageItem = ns.ImageItem = function ImageItem($source, mjGallery, index) {
 
             this.type = ns.Item.TYPE.IMAGE;
 
             this.zoomable = true;
 
-            ns.Item.call(this, $source, mjGallery, index, preload, ImageAPI);
+            ns.Item.call(this, $source, mjGallery, index, ImageAPI);
         };
 
     ns.Item.extend("IMAGE", "image", ImageItem, function (src, type) {
@@ -7052,11 +6931,11 @@
             return "<div class=\"" + ns.CLASS.itemContent + " " + ns.CLASS.draggable + " " + ns.CLASS.video + "\"></div>";
         },
 
-        VideoItem = ns.VideoItem = function VideoItem($source, mjGallery, index, preload) {
+        VideoItem = ns.VideoItem = function VideoItem($source, mjGallery, index) {
 
             this.type = ns.Item.TYPE.YOUTUBE;
 
-            ns.Item.call(this, $source, mjGallery, index, preload, VideoItemAPI);
+            ns.Item.call(this, $source, mjGallery, index, VideoItemAPI);
 
             this.pauseVideoBeforeClose = function () {
 
@@ -7441,11 +7320,11 @@
             return "<div class=\"" + ns.CLASS.itemContent + " " + ns.CLASS.draggable + " " + ns.CLASS.vimeo + "\"></div>";
         },
 
-        VimeoItem = ns.VimeoItem = function VimeoItem($source, mjGallery, index, preload) {
+        VimeoItem = ns.VimeoItem = function VimeoItem($source, mjGallery, index) {
 
             this.type = ns.Item.TYPE.VIMEO;
 
-            ns.Item.call(this, $source, mjGallery, index, preload, VimeoItemAPI);
+            ns.Item.call(this, $source, mjGallery, index, VimeoItemAPI);
 
             this.pauseVideoBeforeClose = function () {
 
@@ -7717,7 +7596,7 @@
 
     VimeoItem.prototype.getTitle = function () {
 
-        if (!this.title && this.mjGallery.getOptions().isSetByUser(ns.OPTIONS.ITEM_TITLE_SELECTOR)) {
+        if (!this.title && !this.mjGallery.getOptions().isSetByUser(ns.OPTIONS.ITEM_TITLE_SELECTOR)) {
 
             this.title = this.getOption("itemTitle") || "";
 
@@ -7823,11 +7702,11 @@
             return "<div class=\"" + ns.CLASS.itemContent + " " + ns.CLASS.draggable + " " + ns.CLASS.youtube + "\"></div>";
         },
 
-        YouTubeItem = ns.YouTubeItem = function YouTubeItem($source, mjGallery, index, preload) {
+        YouTubeItem = ns.YouTubeItem = function YouTubeItem($source, mjGallery, index) {
 
             this.type = ns.Item.TYPE.YOUTUBE;
 
-            ns.Item.call(this, $source, mjGallery, index, preload, YouTubeItemAPI);
+            ns.Item.call(this, $source, mjGallery, index, YouTubeItemAPI);
 
             this.pauseVideoBeforeClose = function () {
 
@@ -8113,7 +7992,7 @@
 
     YouTubeItem.prototype.getTitle = function () {
 
-        if (!this.title && this.mjGallery.getOptions().isSetByUser(ns.OPTIONS.ITEM_TITLE_SELECTOR)) {
+        if (!this.title && !this.mjGallery.getOptions().isSetByUser(ns.OPTIONS.ITEM_TITLE_SELECTOR)) {
 
             this.title = this.getOption("itemTitle") || "";
 

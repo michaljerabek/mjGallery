@@ -48,11 +48,11 @@
             return "<div class=\"" + ns.CLASS.itemContent + " " + ns.CLASS.draggable + " " + ns.CLASS.vimeo + "\"></div>";
         },
 
-        VimeoItem = ns.VimeoItem = function VimeoItem($source, mjGallery, index, preload) {
+        VimeoItem = ns.VimeoItem = function VimeoItem($source, mjGallery, index) {
 
             this.type = ns.Item.TYPE.VIMEO;
 
-            ns.Item.call(this, $source, mjGallery, index, preload, VimeoItemAPI);
+            ns.Item.call(this, $source, mjGallery, index, VimeoItemAPI);
 
             this.pauseVideoBeforeClose = function () {
 
@@ -324,7 +324,7 @@
 
     VimeoItem.prototype.getTitle = function () {
 
-        if (!this.title && this.mjGallery.getOptions().isSetByUser(ns.OPTIONS.ITEM_TITLE_SELECTOR)) {
+        if (!this.title && !this.mjGallery.getOptions().isSetByUser(ns.OPTIONS.ITEM_TITLE_SELECTOR)) {
 
             this.title = this.getOption("itemTitle") || "";
 

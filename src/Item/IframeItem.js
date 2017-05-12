@@ -17,11 +17,11 @@
             return "<iframe src=\"" + (data.src || "") + "\" scrolling=\"yes\" frameborder=\"0\" allowfullscreen mozallowfullscreen webkitallowfullscreen class=\"" + ns.CLASS.itemContent + " " + ns.CLASS.draggable + " " + ns.CLASS.iframe + "\"></iframe>";
         },
 
-        IframeItem = ns.IframeItem = function IframeItem($source, mjGallery, index, preload) {
+        IframeItem = ns.IframeItem = function IframeItem($source, mjGallery, index) {
 
             this.type = ns.Item.TYPE.IFRAME;
 
-            ns.Item.call(this, $source, mjGallery, index, preload, IframeAPI);
+            ns.Item.call(this, $source, mjGallery, index, IframeAPI);
         };
 
     ns.Item.extend("IFRAME", "iframe", IframeItem, function (src) {

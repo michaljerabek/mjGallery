@@ -48,9 +48,7 @@
                 return;
             }
 
-            var $target = ns.$t(event.target),
-
-                $btn = $target.closest(ns.DATA.selector("action"));
+            var $btn = ns.$t(event.target).closest(ns.DATA.selector("action"));
 
             if ($btn.length) {
 
@@ -136,18 +134,10 @@
                 return;
             }
 
-            //+
-            if (event.which === 107 && currentItem.isZoomable()) {
+            //+-
+            if (~[107, 109].indexOf(event.which) && currentItem.isZoomable()) {
 
-                this.mjGallery.zoomIn();
-
-                return false;
-            }
-
-            //-
-            if (event.which === 109 && currentItem.isZoomable()) {
-
-                this.mjGallery.zoomOut();
+                this.mjGallery[event.which === 107 ? "zoomIn" : "zoomOut"]();
 
                 return false;
             }
@@ -186,9 +176,11 @@
 
                 if (this.mjGallery.getCurrentItem().isZoomedIn()) {
 
+                    var step = ns.TRANTSLATE_ZOOM_STEP;
+
                     this.mjGallery.getCurrentItem().translateZoomBy([
-                        event.which === 37 ? ns.TRANTSLATE_ZOOM_STEP : event.which === 39 ? -ns.TRANTSLATE_ZOOM_STEP : 0,
-                        event.which === 38 ? ns.TRANTSLATE_ZOOM_STEP : event.which === 40 ? -ns.TRANTSLATE_ZOOM_STEP : 0
+                        event.which === 37 ? step : event.which === 39 ? -step : 0,
+                        event.which === 38 ? step : event.which === 40 ? -step : 0
                     ], ((1000 / 60) / 1000) * 2);
 
                     this.mjGallery.ignoreEvents = true;
@@ -391,66 +383,25 @@
             this.mjGallery.get().off(this.mjGallery.withNS("click." + NS, "touchend." + NS, "touchmove." + NS, "mousemove." + NS));
         },
 
-        disableLeftArrow = function (init) {
+        toggleArrow = function (which, enable, init) {
 
-            this.$leftArrow.addClass(ns.CLASS.arrowHidden)
-                .blur();
+            this["$" + which + "Arrow"][enable ? "removeClass" : "addClass"](ns.CLASS.arrowHidden);
 
-            this.addFocusRight = !init;
+            if (!enable) {
 
-            this.leftArrow = false;
+                this["$" + which + "Arrow"].blur();
+
+                this["addFocus" + (which === "left" ? "Right" : "Left")] = !init;
+            }
+
+            this[which + "Arrow"] = enable;
         },
 
-        enableLeftArrow = function () {
+        toggleRepeatArrow = function (which, show) {
 
-            this.$leftArrow.removeClass(ns.CLASS.arrowHidden);
+            this["$" + which + "Arrow"][show ? "addClass" : "removeClass"](ns.CLASS.arrowRepeat);
 
-            this.leftArrow = true;
-        },
-
-        disableRightArrow = function (init) {
-
-            this.$rightArrow.addClass(ns.CLASS.arrowHidden)
-                .blur();
-
-            this.addFocusLeft = !init;
-
-            this.rightArrow = false;
-        },
-
-        enableRightArrow = function () {
-
-            this.$rightArrow.removeClass(ns.CLASS.arrowHidden);
-
-            this.rightArrow = true;
-        },
-
-        showRepeatOnLeftArrow = function () {
-
-            this.$leftArrow.addClass(ns.CLASS.arrowRepeat);
-
-            this.leftArrowRepeat = true;
-        },
-
-        showRepeatOnRightArrow = function () {
-
-            this.$rightArrow.addClass(ns.CLASS.arrowRepeat);
-
-            this.rightArrowRepeat = true;
-        },
-
-        hideRepeatOnRightArrow = function () {
-
-            this.$rightArrow.removeClass(ns.CLASS.arrowRepeat);
-
-            this.rightArrowRepeat = false;
-        },
-
-        hideRepeatOnLeftArrow = function () {
-
-            this.$leftArrow.removeClass(ns.CLASS.arrowRepeat);
-
-            this.leftArrowRepeat = false;
+            this[which + "ArrowRepeat"] = show;
         },
 
         initArrows = function () {
@@ -460,36 +411,18 @@
 
             if (totalCount === 1) {
 
-                disableLeftArrow.call(this, true);
-                disableRightArrow.call(this, true);
+                toggleArrow.call(this, "left", false, true);
+                toggleArrow.call(this, "right", false, true);
 
             } else if (totalCount === 2) {
 
-                if (currentIndex === 0) {
+                toggleArrow.call(this, "left", currentIndex !== 0, true);
+                toggleArrow.call(this, "right", currentIndex === 0, true);
 
-                    disableLeftArrow.call(this, true);
-                    enableRightArrow.call(this, true);
-
-                } else {
-
-                    disableRightArrow.call(this, true);
-                    enableLeftArrow.call(this, true);
-                }
             } else {
 
-                if (currentIndex === 0) {
-
-                    showRepeatOnLeftArrow.call(this);
-
-                } else if (currentIndex + 1 === totalCount) {
-
-                    showRepeatOnRightArrow.call(this);
-
-                } else {
-
-                    hideRepeatOnRightArrow.call(this);
-                    hideRepeatOnLeftArrow.call(this);
-                }
+                toggleRepeatArrow.call(this, "left", currentIndex === 0);
+                toggleRepeatArrow.call(this, "right", currentIndex + 1 === totalCount);
             }
         },
 
@@ -539,40 +472,22 @@
 
             if (totalCount === 2) {
 
-                if (!event.prev) {
+                if (!event.prev || !event.next) {
 
-                    enableRightArrow.call(this);
-                    disableLeftArrow.call(this);
+                    toggleArrow.call(this, "right", !event.prev);
+                    toggleArrow.call(this, "left", !!event.prev);
 
-                } else if (!event.next) {
-
-                    enableLeftArrow.call(this);
-                    disableRightArrow.call(this);
-
-                    //pro jistotu
+                //pro jistotu
                 } else {
 
-                    enableRightArrow.call(this);
-                    enableLeftArrow.call(this);
+                    toggleArrow.call(this, "right", true);
+                    toggleArrow.call(this, "left", true);
                 }
 
             } else if (totalCount > 2) {
 
-                if (event.currentIndex === 0) {
-
-                    showRepeatOnLeftArrow.call(this);
-                    hideRepeatOnRightArrow.call(this);
-
-                } else if (event.currentIndex + 1 === totalCount) {
-
-                    hideRepeatOnLeftArrow.call(this);
-                    showRepeatOnRightArrow.call(this);
-
-                } else {
-
-                    hideRepeatOnLeftArrow.call(this);
-                    hideRepeatOnRightArrow.call(this);
-                }
+                toggleRepeatArrow.call(this, "left", event.currentIndex === 0);
+                toggleRepeatArrow.call(this, "right", event.currentIndex + 1 === totalCount);
             }
         };
 
