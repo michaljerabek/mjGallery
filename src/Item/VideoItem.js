@@ -15,11 +15,11 @@
             return "<div class=\"" + ns.CLASS.itemContent + " " + ns.CLASS.draggable + " " + ns.CLASS.video + "\"></div>";
         },
 
-        VideoItem = ns.VideoItem = function VideoItem($source, mjGallery, index, preload) {
+        VideoItem = ns.VideoItem = function VideoItem($source, mjGallery, index) {
 
             this.type = ns.Item.TYPE.YOUTUBE;
 
-            ns.Item.call(this, $source, mjGallery, index, preload, VideoItemAPI);
+            ns.Item.call(this, $source, mjGallery, index, VideoItemAPI);
 
             this.pauseVideoBeforeClose = function () {
 
@@ -46,12 +46,7 @@
 
     VideoItem.prototype.shouldPreserveEvent = function (type) {
 
-        if (type === ns.EVENTS.POINTER) {
-
-            return true;
-        }
-
-        return ns.Item.prototype.shouldPreserveEvent.apply(this, arguments);
+        return type === ns.EVENTS.POINTER || ns.Item.prototype.shouldPreserveEvent.apply(this, arguments);
     };
 
     VideoItem.prototype.getPlayer = function () {

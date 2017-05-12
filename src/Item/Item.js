@@ -30,7 +30,7 @@
             }
         },
 
-        Item = ns.Item = function Item($source, mjGallery, index, preload, APIClass) {
+        Item = ns.Item = function Item($source, mjGallery, index, APIClass) {
 
             this.mjGallery = mjGallery;
 
@@ -42,23 +42,16 @@
 
             this.API = new APIClass(this);
 
-            this.prev = false;
-            this.next = false;
-            this.current = false;
+            this.prev = this.next = this.current = false;
 
             this.zoomable = this.zoomable || false;
             this.zoomValue = 1;
 
             this.generateItem();
 
-            this.transformationController = ns.USE_TRANSITIONS ?
+            this.trfCtrl = ns.USE_TRANSITIONS ?
                 new ns.ItemTransformationCSSController(this, mjGallery) :
                 new ns.ItemTransformationJSController(this, mjGallery);
-
-            if (preload) {
-
-                this.load();
-            }
 
             this.refreshSize();
 
@@ -184,6 +177,11 @@
         return this.$content;
     };
 
+    Item.prototype.getZoom = function () {
+
+        return this.$zoom;
+    };
+
     Item.prototype.getHeight = function () {
 
         return this.height;
@@ -260,15 +258,16 @@
 
     Item.prototype.fitZoom = function (/*done*/) {
 
-        this.transformationController.fitZoom.apply(this.transformationController, arguments);
+        this.trfCtrl.fitZoom.apply(this.trfCtrl, arguments);
 
         return this;
     };
+
     Item.prototype.zoom = function (zoom/*, origin, animate, fit, done*/) {
 
         if (typeof zoom !== "undefined") {
 
-            this.transformationController.zoom.apply(this.transformationController, arguments);
+            this.trfCtrl.zoom.apply(this.trfCtrl, arguments);
 
             return this;
         }
@@ -278,27 +277,21 @@
 
     Item.prototype.translateZoomBy = function (diff, duration, returnDiff) {
 
-        var returnValue = this.transformationController.translateZoomBy.apply(this.transformationController, arguments);
+        var returnValue = this.trfCtrl.translateZoomBy.apply(this.trfCtrl, arguments);
 
         return returnDiff ? returnValue : this;
     };
 
     Item.prototype.slideZoom = function (/*diff, done*/) {
 
-        this.transformationController.slideZoom.apply(this.transformationController, arguments);
+        this.trfCtrl.slideZoom.apply(this.trfCtrl, arguments);
 
         return this;
-
-    };
-
-    Item.prototype.getZoom = function () {
-
-        return this.$zoom;
     };
 
     Item.prototype.isZoomedIn = function () {
 
-        return this.transformationController.isZoomedIn.apply(this.transformationController, arguments);
+        return this.trfCtrl.isZoomedIn.apply(this.trfCtrl, arguments);
     };
 
     Item.prototype.isZoomable = function () {
@@ -429,38 +422,17 @@
 
     Item.prototype.getFullSizeAttr = function () {
 
-        if (this.fullSizeAttr) {
-
-            return this.fullSizeAttr;
-        }
-
-        this.fullSizeAttr = this.getOption("fullSize");
-
-        return this.fullSizeAttr;
+        return this.getOption("fullSize");
     };
 
     Item.prototype.getZoomableAttr = function () {
 
-        if (this.zoomableAttr) {
-
-            return this.zoomableAttr;
-        }
-
-        this.zoomableAttr = this.getOption("zoomable");
-
-        return this.zoomableAttr;
+        return this.getOption("zoomable");
     };
 
     Item.prototype.getObjectFitCoverAttr = function () {
 
-        if (this.objectFitCoverAttr) {
-
-            return this.objectFitCoverAttr;
-        }
-
-        this.objectFitCoverAttr = this.getOption("objectFitCover");
-
-        return this.objectFitCoverAttr;
+        return this.getOption("objectFitCover");
     };
 
     Item.prototype.isObjectFitCover = function () {
@@ -489,14 +461,7 @@
 
     Item.prototype.getTypeAttr = function () {
 
-        if (this.typeAttr) {
-
-            return this.typeAttr;
-        }
-
-        this.typeAttr = this.getOption("type");
-
-        return this.typeAttr;
+        return this.getOption("type");
     };
 
     Item.prototype.getType = function () {
@@ -538,11 +503,6 @@
 
     Item.prototype.addSizesToContent = function () {
 
-        if (!this.$content) {
-
-            return;
-        }
-
         if (!this.contentSizes) {
 
             this.getContentSizes();
@@ -554,11 +514,6 @@
     };
 
     Item.prototype.addSizesToView = function () {
-
-        if (!this.$view) {
-
-            return;
-        }
 
         if (!this.viewSizes) {
 
@@ -705,50 +660,50 @@
 
     Item.prototype.transform = function (/*value, duration*/) {
 
-        this.transformationController.transform.apply(this.transformationController, arguments);
+        this.trfCtrl.transform.apply(this.trfCtrl, arguments);
 
         return this;
     };
 
     Item.prototype.translate = function (/*value, useCurrentScale, duration*/) {
 
-        this.transformationController.translate.apply(this.transformationController, arguments);
+        this.trfCtrl.translate.apply(this.trfCtrl, arguments);
 
         return this;
     };
 
     Item.prototype.translateByState = function (/*value, useCurrentScale, duration*/) {
 
-        this.transformationController.translateByState.apply(this.transformationController, arguments);
+        this.trfCtrl.translateByState.apply(this.trfCtrl, arguments);
 
         return this;
     };
 
     Item.prototype.scale = function (/*value, useCurrentTranslate, duration*/) {
 
-        this.transformationController.scale.apply(this.transformationController, arguments);
+        this.trfCtrl.scale.apply(this.trfCtrl, arguments);
 
         return this;
     };
 
     Item.prototype.getTranslate = function () {
 
-        return this.transformationController.getTranslate.apply(this.transformationController, arguments);
+        return this.trfCtrl.getTranslate.apply(this.trfCtrl, arguments);
     };
 
     Item.prototype.getScale = function () {
 
-        return this.transformationController.getScale.apply(this.transformationController, arguments);
+        return this.trfCtrl.getScale.apply(this.trfCtrl, arguments);
     };
 
     Item.prototype.getZoomScale = function () {
 
-        return this.transformationController.getZoomScale.apply(this.transformationController, arguments);
+        return this.trfCtrl.getZoomScale.apply(this.trfCtrl, arguments);
     };
 
     Item.prototype.clearTransform = function (/*duration, done*/) {
 
-        this.transformationController.clearTransform.apply(this.transformationController, arguments);
+        this.trfCtrl.clearTransform.apply(this.trfCtrl, arguments);
 
         return this;
     };
@@ -814,15 +769,14 @@
 
     Item.prototype.setAsCurrent = function (duration, done) {
 
-        this.prev = false;
-        this.next = false;
+        this.prev = this.next = false;
         this.current = true;
 
         this.load();
 
         if (duration) {
 
-            this.transformationController.clearTransform(duration, function () {
+            this.trfCtrl.clearTransform(duration, function () {
 
                 done.call(this);
 
@@ -832,7 +786,7 @@
 
             if (ns.USE_TRANSITIONS) {
 
-                this.transformationController.stopTransition();
+                this.trfCtrl.stopTransition();
             }
         }
 
@@ -853,9 +807,8 @@
 
     Item.prototype.setAsPrev = function (duration, done) {
 
+        this.next = this.current = false;
         this.prev = true;
-        this.next = false;
-        this.current = false;
 
         this.load();
 
@@ -873,7 +826,7 @@
                 this.$self.addClass(ns.CLASS.itemAnim);
             }
 
-            this.transformationController.clearTransform(duration, function () {
+            this.trfCtrl.clearTransform(duration, function () {
 
                 this.$self.removeClass(ns.CLASS.itemAnim);
 
@@ -890,7 +843,7 @@
 
             if (ns.USE_TRANSITIONS) {
 
-                this.transformationController.stopTransition();
+                this.trfCtrl.stopTransition();
             }
         }
 
@@ -903,9 +856,8 @@
 
     Item.prototype.setAsNext = function (duration, done) {
 
-        this.prev = false;
+        this.prev = this.current = false;
         this.next = true;
-        this.current = false;
 
         this.load();
 
@@ -923,7 +875,7 @@
                 this.$self.addClass(ns.CLASS.itemAnim);
             }
 
-            this.transformationController.clearTransform(duration, function () {
+            this.trfCtrl.clearTransform(duration, function () {
 
                 this.$self.removeClass(ns.CLASS.itemAnim);
 
@@ -940,7 +892,7 @@
 
             if (ns.USE_TRANSITIONS) {
 
-                this.transformationController.stopTransition();
+                this.trfCtrl.stopTransition();
             }
         }
 
@@ -953,11 +905,9 @@
 
     Item.prototype.clearState = function () {
 
-        this.prev = false;
-        this.next = false;
-        this.current = false;
+        this.prev = this.next = this.current = false;
 
-        this.transformationController.clearTransform();
+        this.trfCtrl.clearTransform();
 
         this.unsetAsClosing();
 
@@ -971,7 +921,7 @@
 
     Item.prototype.setAsClosing = function (/*duration, dir, translate, scale*/) {
 
-        this.transformationController.closeAnim.apply(this.transformationController, arguments);
+        this.trfCtrl.closeAnim.apply(this.trfCtrl, arguments);
 
         return this;
     };
@@ -998,7 +948,7 @@
 
     Item.prototype.edgeAnim = function (/*dir, done*/) {
 
-        this.transformationController.edgeAnim.apply(this.transformationController, arguments);
+        this.trfCtrl.edgeAnim.apply(this.trfCtrl, arguments);
 
         return this;
     };

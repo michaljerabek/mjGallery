@@ -17,13 +17,13 @@
             return "<img src=\"" + (data.src || "") + "\" srcset=\"" + (data.srcset || "") + "\" sizes=\"" + (data.sizes || "") + "\" alt=\"" + (data.alt || "") + "\" class=\"" + ns.CLASS.itemContent + " " + ns.CLASS.draggable + " " + ns.CLASS.image + "\">";
         },
 
-        ImageItem = ns.ImageItem = function ImageItem($source, mjGallery, index, preload) {
+        ImageItem = ns.ImageItem = function ImageItem($source, mjGallery, index) {
 
             this.type = ns.Item.TYPE.IMAGE;
 
             this.zoomable = true;
 
-            ns.Item.call(this, $source, mjGallery, index, preload, ImageAPI);
+            ns.Item.call(this, $source, mjGallery, index, ImageAPI);
         };
 
     ns.Item.extend("IMAGE", "image", ImageItem, function (src, type) {
@@ -88,40 +88,28 @@
 
     ImageItem.prototype.getSrcsetAttr = function () {
 
-        if (typeof this.srcset !== "undefined") {
-
-            return this.srcset;
-        }
-
-        this.srcset = this.getOption("srcset") || "";
-
-        return this.srcset;
+        return this.getOption("srcset") || "";
     };
 
     ImageItem.prototype.getSizesAttr = function () {
 
-        if (this.imgSizes) {
+        var imgSizes = this.getOption("sizes");
 
-            return this.imgSizes;
-        }
-
-        this.imgSizes = this.getOption("sizes");
-
-        if (!this.imgSizes) {
+        if (!imgSizes) {
 
             this.getContentSizes();
 
             if (this.contentSizes.maxWidth) {
 
-                this.imgSizes = parseFloat(this.contentSizes.maxWidth) + "%";
+                imgSizes = parseFloat(this.contentSizes.maxWidth) + "%";
 
             } else {
 
-                this.imgSizes = this.mjGallery.getOption(ns.OPTIONS.FULL_SIZE_ITEMS) ? "100%" : ns.NOT_FULL_SIZE_ITEMS_WIDTH + "%";
+                imgSizes = this.mjGallery.getOption(ns.OPTIONS.FULL_SIZE_ITEMS) ? "100%" : ns.NOT_FULL_SIZE_ITEMS_WIDTH + "%";
             }
         }
 
-        return this.imgSizes;
+        return imgSizes;
     };
 
 }(window.mjGallery, jQuery));

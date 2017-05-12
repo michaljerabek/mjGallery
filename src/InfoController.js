@@ -205,9 +205,11 @@
 
             this.mjGallery = mjGallery;
 
-            this.$itemInfo = mjGallery.$self.find(ns.CLASS.selector("itemInfo"));
+            this.$mjg = mjGallery.get();
 
-            this.$info = this.mjGallery.get().find(ns.CLASS.selector("info"));
+            this.$itemInfo = this.$mjg.find(ns.CLASS.selector("itemInfo"));
+
+            this.$info = this.$mjg.find(ns.CLASS.selector("info"));
 
             this.current = null;
 
@@ -300,21 +302,21 @@
 
     InfoController.prototype.toggleInfo = function () {
 
-        this.mjGallery.get().toggleClass(ns.CLASS.selfInfoActive);
+        this.$mjg.toggleClass(ns.CLASS.selfInfoActive);
 
         return this;
     };
 
     InfoController.prototype.showInfo = function () {
 
-        this.mjGallery.get().addClass(ns.CLASS.selfInfoActive);
+        this.$mjg.addClass(ns.CLASS.selfInfoActive);
 
         return this;
     };
 
     InfoController.prototype.hideInfo = function () {
 
-        this.mjGallery.get().removeClass(ns.CLASS.selfInfoActive);
+        this.$mjg.removeClass(ns.CLASS.selfInfoActive);
 
         return this;
     };

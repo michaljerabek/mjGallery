@@ -55,11 +55,11 @@
             return "<div class=\"" + ns.CLASS.itemContent + " " + ns.CLASS.draggable + " " + ns.CLASS.youtube + "\"></div>";
         },
 
-        YouTubeItem = ns.YouTubeItem = function YouTubeItem($source, mjGallery, index, preload) {
+        YouTubeItem = ns.YouTubeItem = function YouTubeItem($source, mjGallery, index) {
 
             this.type = ns.Item.TYPE.YOUTUBE;
 
-            ns.Item.call(this, $source, mjGallery, index, preload, YouTubeItemAPI);
+            ns.Item.call(this, $source, mjGallery, index, YouTubeItemAPI);
 
             this.pauseVideoBeforeClose = function () {
 
@@ -345,7 +345,7 @@
 
     YouTubeItem.prototype.getTitle = function () {
 
-        if (!this.title && this.mjGallery.getOptions().isSetByUser(ns.OPTIONS.ITEM_TITLE_SELECTOR)) {
+        if (!this.title && !this.mjGallery.getOptions().isSetByUser(ns.OPTIONS.ITEM_TITLE_SELECTOR)) {
 
             this.title = this.getOption("itemTitle") || "";
 
