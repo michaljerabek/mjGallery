@@ -4970,7 +4970,7 @@
 
             this.refreshSize();
 
-//            this.refreshSize = this.refreshSize.bind(this); //??
+            this.refreshSize = this.refreshSize.bind(this);
 
             ns.EVENT.on(ns.EVENT.resize, this.refreshSize.bind(this), mjGallery);
         };
@@ -5092,6 +5092,11 @@
         return this.$content;
     };
 
+    Item.prototype.getZoom = function () {
+
+        return this.$zoom;
+    };
+
     Item.prototype.getHeight = function () {
 
         return this.height;
@@ -5197,11 +5202,6 @@
         this.trfCtrl.slideZoom.apply(this.trfCtrl, arguments);
 
         return this;
-    };
-
-    Item.prototype.getZoom = function () {
-
-        return this.$zoom;
     };
 
     Item.prototype.isZoomedIn = function () {
@@ -5337,38 +5337,17 @@
 
     Item.prototype.getFullSizeAttr = function () {
 
-        if (this.fullSizeAttr) {
-
-            return this.fullSizeAttr;
-        }
-
-        this.fullSizeAttr = this.getOption("fullSize");
-
-        return this.fullSizeAttr;
+        return this.getOption("fullSize");
     };
 
     Item.prototype.getZoomableAttr = function () {
 
-        if (this.zoomableAttr) {
-
-            return this.zoomableAttr;
-        }
-
-        this.zoomableAttr = this.getOption("zoomable");
-
-        return this.zoomableAttr;
+        return this.getOption("zoomable");
     };
 
     Item.prototype.getObjectFitCoverAttr = function () {
 
-        if (this.objectFitCoverAttr) {
-
-            return this.objectFitCoverAttr;
-        }
-
-        this.objectFitCoverAttr = this.getOption("objectFitCover");
-
-        return this.objectFitCoverAttr;
+        return this.getOption("objectFitCover");
     };
 
     Item.prototype.isObjectFitCover = function () {
@@ -5397,14 +5376,7 @@
 
     Item.prototype.getTypeAttr = function () {
 
-        if (this.typeAttr) {
-
-            return this.typeAttr;
-        }
-
-        this.typeAttr = this.getOption("type");
-
-        return this.typeAttr;
+        return this.getOption("type");
     };
 
     Item.prototype.getType = function () {
@@ -5446,11 +5418,6 @@
 
     Item.prototype.addSizesToContent = function () {
 
-        if (!this.$content) {
-
-            return;
-        }
-
         if (!this.contentSizes) {
 
             this.getContentSizes();
@@ -5462,11 +5429,6 @@
     };
 
     Item.prototype.addSizesToView = function () {
-
-        if (!this.$view) {
-
-            return;
-        }
 
         if (!this.viewSizes) {
 
@@ -5722,8 +5684,7 @@
 
     Item.prototype.setAsCurrent = function (duration, done) {
 
-        this.prev = false;
-        this.next = false;
+        this.prev = this.next = false;
         this.current = true;
 
         this.load();
@@ -5761,9 +5722,8 @@
 
     Item.prototype.setAsPrev = function (duration, done) {
 
+        this.next = this.current = false;
         this.prev = true;
-        this.next = false;
-        this.current = false;
 
         this.load();
 
@@ -5811,9 +5771,8 @@
 
     Item.prototype.setAsNext = function (duration, done) {
 
-        this.prev = false;
+        this.prev = this.current = false;
         this.next = true;
-        this.current = false;
 
         this.load();
 
@@ -5861,9 +5820,7 @@
 
     Item.prototype.clearState = function () {
 
-        this.prev = false;
-        this.next = false;
-        this.current = false;
+        this.prev = this.next = this.current = false;
 
         this.trfCtrl.clearTransform();
 
@@ -6000,7 +5957,7 @@
 
     HTMLItem.prototype.getIframe = function () {
 
-        if (this.iframe) {
+        if (this.$iframe) {
 
             return this.$iframe;
         }
@@ -6122,16 +6079,11 @@
 
     HTMLItem.prototype.getMethod = function () {
 
-        if (typeof this.method !== "undefined") {
+        var method = this.$source.data(ns.DATA.method) || this.mjGallery.getOption(ns.OPTIONS.HTML_GENERATE_METHOD);
 
-            return this.method;
-        }
+        method = method ? method.toLowerCase() : this.getSrcAttr() ? HTMLItem.METHOD.APPEND : HTMLItem.METHOD.GENERATE;
 
-        this.method = this.$source.data(ns.DATA.method) || this.mjGallery.getOption(ns.OPTIONS.HTML_GENERATE_METHOD);
-
-        this.method = this.method ? this.method.toLowerCase() : this.getSrcAttr() ? HTMLItem.METHOD.APPEND : HTMLItem.METHOD.GENERATE;
-
-        return this.method;
+        return method;
     };
 
     HTMLItem.prototype.appendContent = function (content) {
@@ -6335,40 +6287,28 @@
 
     ImageItem.prototype.getSrcsetAttr = function () {
 
-        if (typeof this.srcset !== "undefined") {
-
-            return this.srcset;
-        }
-
-        this.srcset = this.getOption("srcset") || "";
-
-        return this.srcset;
+        return this.getOption("srcset") || "";
     };
 
     ImageItem.prototype.getSizesAttr = function () {
 
-        if (this.imgSizes) {
+        var imgSizes = this.getOption("sizes");
 
-            return this.imgSizes;
-        }
-
-        this.imgSizes = this.getOption("sizes");
-
-        if (!this.imgSizes) {
+        if (!imgSizes) {
 
             this.getContentSizes();
 
             if (this.contentSizes.maxWidth) {
 
-                this.imgSizes = parseFloat(this.contentSizes.maxWidth) + "%";
+                imgSizes = parseFloat(this.contentSizes.maxWidth) + "%";
 
             } else {
 
-                this.imgSizes = this.mjGallery.getOption(ns.OPTIONS.FULL_SIZE_ITEMS) ? "100%" : ns.NOT_FULL_SIZE_ITEMS_WIDTH + "%";
+                imgSizes = this.mjGallery.getOption(ns.OPTIONS.FULL_SIZE_ITEMS) ? "100%" : ns.NOT_FULL_SIZE_ITEMS_WIDTH + "%";
             }
         }
 
-        return this.imgSizes;
+        return imgSizes;
     };
 
 }(window.mjGallery, jQuery));
@@ -6962,12 +6902,7 @@
 
     VideoItem.prototype.shouldPreserveEvent = function (type) {
 
-        if (type === ns.EVENTS.POINTER) {
-
-            return true;
-        }
-
-        return ns.Item.prototype.shouldPreserveEvent.apply(this, arguments);
+        return type === ns.EVENTS.POINTER || ns.Item.prototype.shouldPreserveEvent.apply(this, arguments);
     };
 
     VideoItem.prototype.getPlayer = function () {
