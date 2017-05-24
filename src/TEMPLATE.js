@@ -83,7 +83,7 @@
             SELF: function (content, mod) {
 
                 return [
-                    "<span class=\"icon " + (mod ? "icon--" + mod: "") + "\">",
+                    "<span class=\"mj-gallery__icon " + (mod ? "mj-gallery__icon--" + mod: "") + "\">",
                         "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\">",
                             content,
                         "</svg>",
