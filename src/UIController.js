@@ -7,6 +7,8 @@
 
         pointerMovedOnBtn = false,
 
+        shiftKey = false,
+
         onOverlay = function (event) {
 
             var onOverlay = this.mjGallery.getCurrentItem().considerEventAsOnOverlay(event);
@@ -99,6 +101,11 @@
 
         onKeyup = function (event) {
 
+            if (event.which === 16) {
+
+                shiftKey = false;
+            }
+
             if (this.mjGallery.isClosed()) {
 
                 return;
@@ -165,6 +172,11 @@
         },
 
         onKeydown = function (event) {
+
+            if (event.which === 16) {
+
+                shiftKey = true;
+            }
 
             if (this.mjGallery.isClosed() || this.mjGallery.getCurrentItem().shouldPreserveEvent(ns.EVENTS.KEYS, event)) {
 
@@ -248,9 +260,9 @@
 
             if (!$target.closest(ns.CLASS.selector("self")).length || focusInNotCurrentItem) {
 
-                var $focusable = this.mjGallery.get().find("a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]");
+                var $focusable = $([this.mjGallery.getCurrentItem().get()[0], this.$self[0]]).find("a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]");
 
-                $focusable[event.originalEvent.shiftKey ? "last" : "first"]().focus();
+                $focusable[shiftKey ? "last" : "first"]().focus();
 
                 if (focusInNotCurrentItem) {
 
@@ -395,6 +407,7 @@
             }
 
             this[which + "Arrow"] = enable;
+            this["$" + which + "Arrow"][0].disabled = !enable;
         },
 
         toggleRepeatArrow = function (which, show) {

@@ -921,6 +921,8 @@
 
     Item.prototype.setAsClosing = function (/*duration, dir, translate, scale*/) {
 
+        this.removeFocus();
+
         this.trfCtrl.closeAnim.apply(this.trfCtrl, arguments);
 
         return this;

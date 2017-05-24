@@ -2475,7 +2475,7 @@
             SELF: function (content, mod) {
 
                 return [
-                    "<span class=\"icon " + (mod ? "icon--" + mod: "") + "\">",
+                    "<span class=\"mj-gallery__icon " + (mod ? "mj-gallery__icon--" + mod: "") + "\">",
                         "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\">",
                             content,
                         "</svg>",
@@ -3792,6 +3792,8 @@
 
         pointerMovedOnBtn = false,
 
+        shiftKey = false,
+
         onOverlay = function (event) {
 
             var onOverlay = this.mjGallery.getCurrentItem().considerEventAsOnOverlay(event);
@@ -3884,6 +3886,11 @@
 
         onKeyup = function (event) {
 
+            if (event.which === 16) {
+
+                shiftKey = false;
+            }
+
             if (this.mjGallery.isClosed()) {
 
                 return;
@@ -3950,6 +3957,11 @@
         },
 
         onKeydown = function (event) {
+
+            if (event.which === 16) {
+
+                shiftKey = true;
+            }
 
             if (this.mjGallery.isClosed() || this.mjGallery.getCurrentItem().shouldPreserveEvent(ns.EVENTS.KEYS, event)) {
 
@@ -4033,9 +4045,9 @@
 
             if (!$target.closest(ns.CLASS.selector("self")).length || focusInNotCurrentItem) {
 
-                var $focusable = this.mjGallery.get().find("a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]");
+                var $focusable = $([this.mjGallery.getCurrentItem().get()[0], this.$self[0]]).find("a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]");
 
-                $focusable[event.originalEvent.shiftKey ? "last" : "first"]().focus();
+                $focusable[shiftKey ? "last" : "first"]().focus();
 
                 if (focusInNotCurrentItem) {
 
@@ -4180,6 +4192,7 @@
             }
 
             this[which + "Arrow"] = enable;
+            this["$" + which + "Arrow"][0].disabled = !enable;
         },
 
         toggleRepeatArrow = function (which, show) {
@@ -5834,6 +5847,8 @@
 
     Item.prototype.setAsClosing = function (/*duration, dir, translate, scale*/) {
 
+        this.removeFocus();
+
         this.trfCtrl.closeAnim.apply(this.trfCtrl, arguments);
 
         return this;
@@ -7000,7 +7015,7 @@
 
         ns.Item.prototype.destroy.call(this);
 
-        ns.EVENT.off(ns.EVENT.beforeClose, this.pauseVideoBeforeClose);
+        ns.EVENT.off(ns.EVENT.beforeClose, this.pauseVideoBeforeClose, this.mjGallery);
     };
 
     VideoItem.prototype.getMethod = function () {
@@ -7376,7 +7391,7 @@
 
         ns.Item.prototype.destroy.call(this);
 
-        ns.EVENT.off(ns.EVENT.beforeClose, this.pauseVideoBeforeClose);
+        ns.EVENT.off(ns.EVENT.beforeClose, this.pauseVideoBeforeClose, this.mjGallery);
     };
 
     VimeoItem.prototype.getVideoId = function () {
@@ -7758,7 +7773,7 @@
 
         ns.Item.prototype.destroy.call(this);
 
-        ns.EVENT.off(ns.EVENT.beforeClose, this.pauseVideoBeforeClose);
+        ns.EVENT.off(ns.EVENT.beforeClose, this.pauseVideoBeforeClose, this.mjGallery);
     };
 
     YouTubeItem.prototype.getVideoId = function () {
