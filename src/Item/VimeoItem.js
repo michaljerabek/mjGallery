@@ -172,7 +172,7 @@
 
         ns.Item.prototype.destroy.call(this);
 
-        ns.EVENT.off(ns.EVENT.beforeClose, this.pauseVideoBeforeClose);
+        ns.EVENT.off(ns.EVENT.beforeClose, this.pauseVideoBeforeClose, this.mjGallery);
     };
 
     VimeoItem.prototype.getVideoId = function () {

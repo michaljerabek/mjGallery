@@ -147,7 +147,7 @@
 
         ns.Item.prototype.destroy.call(this);
 
-        ns.EVENT.off(ns.EVENT.beforeClose, this.pauseVideoBeforeClose);
+        ns.EVENT.off(ns.EVENT.beforeClose, this.pauseVideoBeforeClose, this.mjGallery);
     };
 
     VideoItem.prototype.getMethod = function () {
