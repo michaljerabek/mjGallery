@@ -254,13 +254,31 @@
         onFocus = function (event) {
 
             var $target = ns.$t(event.target),
-                $item = $target.closest(ns.CLASS.selector("item")),
 
-                focusInNotCurrentItem = $item.length && $item[0] !== this.mjGallery.getCurrentItem().get()[0];
+                $focusedItem = $target.closest(ns.CLASS.selector("item")),
+                $currentItem = this.mjGallery.getCurrentItem().get(),
+
+                focusedItemIndex = $focusedItem.index(),
+                currentItemIndex = $currentItem.index(),
+
+                focusInNotCurrentItem = $focusedItem.length && $focusedItem[0] !== $currentItem[0],
+
+                $focusable;
 
             if (!$target.closest(ns.CLASS.selector("self")).length || focusInNotCurrentItem) {
 
-                var $focusable = $([this.mjGallery.getCurrentItem().get()[0], this.$self[0]]).find("a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]");
+                if (focusedItemIndex > -1 && focusedItemIndex > currentItemIndex) {
+
+                    $focusable = this.$self.find(ns.FOCUSABLE);
+
+                } else if (focusedItemIndex > -1 && focusedItemIndex < currentItemIndex) {
+
+                    $focusable = !shiftKey ? $currentItem.find(ns.FOCUSABLE) : this.$self.find(ns.FOCUSABLE);
+
+                } else {
+
+                    $focusable = shiftKey ? $currentItem.find(ns.FOCUSABLE) : this.$self.find(ns.FOCUSABLE);
+                }
 
                 $focusable[shiftKey ? "last" : "first"]().focus();
 

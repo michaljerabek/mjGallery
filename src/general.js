@@ -232,6 +232,8 @@
     ns.$win = $(window);
     ns.$doc = $(document);
 
+    ns.FOCUSABLE = "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]";
+
     ns.NOT_FULL_SIZE_ITEMS_WIDTH = 85;
 
     ns.MIN_MOVE_TO_CHANGE = window.innerWidth < 768 ? window.innerWidth < 480 ? 35 : 50 : 75;
