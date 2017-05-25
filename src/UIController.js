@@ -267,17 +267,14 @@
 
             if (!$target.closest(ns.CLASS.selector("self")).length || focusInNotCurrentItem) {
 
-                if (focusedItemIndex > -1 && focusedItemIndex > currentItemIndex) {
+                if ((focusedItemIndex > -1 && focusedItemIndex < currentItemIndex && !shiftKey) || (focusedItemIndex === -1 && shiftKey)) {
+
+                    $focusable = $currentItem.find(ns.FOCUSABLE);
+                }
+
+                if (!$focusable || !$focusable.length) {
 
                     $focusable = this.$self.find(ns.FOCUSABLE);
-
-                } else if (focusedItemIndex > -1 && focusedItemIndex < currentItemIndex) {
-
-                    $focusable = !shiftKey ? $currentItem.find(ns.FOCUSABLE) : this.$self.find(ns.FOCUSABLE);
-
-                } else {
-
-                    $focusable = shiftKey ? $currentItem.find(ns.FOCUSABLE) : this.$self.find(ns.FOCUSABLE);
                 }
 
                 $focusable[shiftKey ? "last" : "first"]().focus();
