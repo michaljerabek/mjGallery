@@ -282,13 +282,6 @@
         return returnDiff ? returnValue : this;
     };
 
-    Item.prototype.slideZoom = function (/*diff, done*/) {
-
-        this.trfCtrl.slideZoom.apply(this.trfCtrl, arguments);
-
-        return this;
-    };
-
     Item.prototype.isZoomedIn = function () {
 
         return this.trfCtrl.isZoomedIn.apply(this.trfCtrl, arguments);
@@ -658,54 +651,9 @@
         return this;
     };
 
-    Item.prototype.transform = function (/*value, duration*/) {
+    Item.prototype.getTrfCtrl = function () {
 
-        this.trfCtrl.transform.apply(this.trfCtrl, arguments);
-
-        return this;
-    };
-
-    Item.prototype.translate = function (/*value, useCurrentScale, duration*/) {
-
-        this.trfCtrl.translate.apply(this.trfCtrl, arguments);
-
-        return this;
-    };
-
-    Item.prototype.translateByState = function (/*value, useCurrentScale, duration*/) {
-
-        this.trfCtrl.translateByState.apply(this.trfCtrl, arguments);
-
-        return this;
-    };
-
-    Item.prototype.scale = function (/*value, useCurrentTranslate, duration*/) {
-
-        this.trfCtrl.scale.apply(this.trfCtrl, arguments);
-
-        return this;
-    };
-
-    Item.prototype.getTranslate = function () {
-
-        return this.trfCtrl.getTranslate.apply(this.trfCtrl, arguments);
-    };
-
-    Item.prototype.getScale = function () {
-
-        return this.trfCtrl.getScale.apply(this.trfCtrl, arguments);
-    };
-
-    Item.prototype.getZoomScale = function () {
-
-        return this.trfCtrl.getZoomScale.apply(this.trfCtrl, arguments);
-    };
-
-    Item.prototype.clearTransform = function (/*duration, done*/) {
-
-        this.trfCtrl.clearTransform.apply(this.trfCtrl, arguments);
-
-        return this;
+        return this.trfCtrl;
     };
 
     Item.prototype.setOpacity = function (value, duration) {

@@ -297,17 +297,17 @@
                 return;
             }
 
-            var currentTranslateX = this.currentItem.getTranslate().x,
+            var currentTranslateX = this.currentItem.getTrfCtrl().getTranslate().x,
 
                 diffX = this.pointer.diff.x / 2,
 
                 moveX = currentTranslateX + diffX;
 
-            this.currentItem.translateByState([moveX]);
+            this.currentItem.getTrfCtrl().translateByState([moveX]);
 
-            this.prevItem.translateByState([moveX]);
+            this.prevItem.getTrfCtrl().translateByState([moveX]);
 
-            this.nextItem.translateByState([moveX]);
+            this.nextItem.getTrfCtrl().translateByState([moveX]);
         },
 
         moveEdgeItemHorizontally = function () {
@@ -317,7 +317,7 @@
                 return;
             }
 
-            var currentTranslateX = this.currentItem.getTranslate().x,
+            var currentTranslateX = this.currentItem.getTrfCtrl().getTranslate().x,
 
                 diffX = this.pointer.diff.x / 2,
 
@@ -325,7 +325,7 @@
 
                 moveX = currentTranslateX + (diffX * (1 - (Math.min(maxMoveX, Math.abs(currentTranslateX)) / (maxMoveX))));
 
-            this.currentItem.translateByState([moveX]);
+            this.currentItem.getTrfCtrl().translateByState([moveX]);
 
             this.backFromEdge = true;
         },
@@ -337,7 +337,7 @@
                 return;
             }
 
-            var translate = this.currentItem.getTranslate(),
+            var translate = this.currentItem.getTrfCtrl().getTranslate(),
 
                 height = this.currentItem.getHeight() / 4,
                 currentTranslateY = Math.abs(translate.y),
@@ -345,6 +345,7 @@
                 opacityChange = Math.max(0, Math.min(currentTranslateY / height, 1));
 
             this.currentItem.setOpacity(1 - opacityChange)
+                .getTrfCtrl()
                 .translate([0, this.pointer.startDiff.y]);
 
             //když slajd zmizí, "vypínat" celou galerii
@@ -457,7 +458,7 @@
                 return;
             }
 
-            var scale = this.currentItem.getZoomScale().x,
+            var scale = this.currentItem.getTrfCtrl().getZoomScale().x,
 
                 diff = 0;
 
@@ -500,7 +501,7 @@
 
         zoomItem = function (useOrigin) {
 
-            var scale = this.currentItem.getZoomScale().x,
+            var scale = this.currentItem.getTrfCtrl().getZoomScale().x,
 
                 diff = this.pointer.pinch.diff / ns.GET_MAX_MOVE_OVER(),
 
@@ -541,7 +542,7 @@
 
         scaleToClose = function () {
 
-            var scale = this.currentItem.getScale().x,
+            var scale = this.currentItem.getTrfCtrl().getScale().x,
 
                 diff = this.pointer.pinch.diff / this.pointer.pinch.startDist,
 
@@ -633,7 +634,7 @@
             //pinch
             if (this.pointer.count > 1 && !this.itemDirFix) {
 
-                var scale = this.currentItem.getScale().x;
+                var scale = this.currentItem.getTrfCtrl().getScale().x;
 
                 scaleItem.call(this);
 
@@ -658,7 +659,7 @@
                 value: this.pointer.isTouch() ? 9 : 0
             });
 
-            var translate = this.currentItem.getTranslate();
+            var translate = this.currentItem.getTrfCtrl().getTranslate();
 
             //další/předchozí slajd (doleva/doprava)
             if (this.itemDirFix === ns.Pointer.FIX.HOR) {
@@ -759,7 +760,7 @@
                     diff.y /= 2;
                 }
 
-                this.currentItem.slideZoom([diff.x, diff.y]);
+                this.currentItem.getTrfCtrl().slideZoom([diff.x, diff.y]);
 
             } else {
 
@@ -942,9 +943,7 @@
 
             this.resetScroll();
 
-            var onFocusable = ns.$t(event.target).is("a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, *[tabindex], *[contenteditable]");
-
-            if (onFocusable) {
+            if (ns.$t(event.target).is(ns.FOCUSABLE)) {
 
                 this.focusOnEnd = event.type.match(/touch/) ? event.target: null;
 
@@ -1521,7 +1520,7 @@
 
                 this.ignoreEvents = true;
 
-                this.currentItem.edgeAnim(ns.DIR.LEFT, function () {
+                this.currentItem.getTrfCtrl().edgeAnim(ns.DIR.LEFT, function () {
 
                     this.ignoreEvents = false;
 
@@ -1541,7 +1540,7 @@
 
             this.ignoreEvents = true;
 
-            this.nextItem.clearTransform();
+            this.nextItem.getTrfCtrl().clearTransform();
 
             this.swapItemsBackwards();
 
@@ -1578,7 +1577,7 @@
 
                 this.ignoreEvents = true;
 
-                this.currentItem.edgeAnim(ns.DIR.RIGHT, function () {
+                this.currentItem.getTrfCtrl().edgeAnim(ns.DIR.RIGHT, function () {
 
                     this.ignoreEvents = false;
 
@@ -1598,7 +1597,7 @@
 
             this.ignoreEvents = true;
 
-            this.prevItem.clearTransform();
+            this.prevItem.getTrfCtrl().clearTransform();
 
             this.swapItemsForwards();
 
@@ -1690,12 +1689,13 @@
 
     mjGallery.prototype.resetToCurrent = function (duration) {
 
-        var currentTranslate = this.currentItem.getTranslate(),
-            currentScale = this.currentItem.getScale();
+        var currentTranslate = this.currentItem.getTrfCtrl().getTranslate(),
+            currentScale = this.currentItem.getTrfCtrl().getScale();
 
         this.ignoreEvents = !!(currentTranslate.x || currentTranslate.y || currentScale.x !== 1);
 
         this.currentItem.clearOpacity(duration || ns.DEF_DURATION / 1000)
+            .getTrfCtrl()
             .clearTransform(duration || ns.DEF_DURATION / 1000, function () {
 
                 this.ignoreEvents = false;
@@ -1704,9 +1704,11 @@
             }.bind(this));
 
         this.prevItem.clearOpacity(duration || ns.DEF_DURATION / 1000)
+            .getTrfCtrl()
             .clearTransform(duration || ns.DEF_DURATION / 1000);
 
         this.nextItem.clearOpacity(duration || ns.DEF_DURATION / 1000)
+            .getTrfCtrl()
             .clearTransform(duration || ns.DEF_DURATION / 1000);
 
         this.resetScroll();
