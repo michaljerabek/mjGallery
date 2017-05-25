@@ -935,11 +935,14 @@
             this.nextItem.refreshSize();
             this.prevItem.refreshSize();
 
-            ns.$win.off(this.withNS("mousemove", "touchmove"))
-                .on(this.withNS("mousemove", "touchmove"), onItemMove.bind(this));
+            var moveEvents = this.withNS("mousemove", "touchmove"),
+                endEvents = this.withNS("mouseup", "touchend");
 
-            ns.$win.off(this.withNS("mouseup", "touchend"))
-                .one(this.withNS("mouseup", "touchend"), onItemEnd.bind(this));
+            ns.$win.off(moveEvents)
+                .on(moveEvents, onItemMove.bind(this));
+
+            ns.$win.off(endEvents)
+                .one(endEvents, onItemEnd.bind(this));
 
             this.resetScroll();
 
@@ -1022,14 +1025,16 @@
                     this.getOption(ns.OPTIONS.OPENING_ELEMENT)
                 );
 
-                var onOpeningElementMove = false;
+                var onOpeningElementMove = false,
 
-                this.$openingElement.off(this.withNS("click", "touchend", "touchmove", "touchstart"))
-                    .on(this.withNS("click", "touchend", "touchmove", "touchstart"), function (event) {
+                    openElEvents = this.withNS("click", "touchend", "touchmove", "touchstart");
+
+                this.$openingElement.off(openElEvents)
+                    .on(openElEvents, function (event) {
 
                         onOpenGalleryByUser.call(this, event, onOpeningElementMove);
 
-                        onOpeningElementMove = event.type === "touchmove";
+                        onOpeningElementMove = event.type.match(/move/);
 
                     }.bind(this));
             }
@@ -1037,14 +1042,16 @@
             //pokud se používá openBy, pak přiřadit otevírání zrdojům, jen pokud je nastaven selector
             if (this.options.isSetByUser(ns.OPTIONS.ITEMS_SELECTOR) || (!this.getOption(ns.OPTIONS.OPENING_ELEMENT) && this.getOption(ns.OPTIONS.ITEMS_SELECTOR))) {
 
-                var onSourceElementMove = false;
+                var onSourceElementMove = false,
 
-                ns.$doc.off(this.withNS("click", "touchend", "touchmove", "touchstart"))
-                    .on(this.withNS("click", "touchend", "touchmove", "touchstart"), this.getOption(ns.OPTIONS.ITEMS_SELECTOR), function (event) {
+                    docEvents = this.withNS("click", "touchend", "touchmove", "touchstart");
+
+                ns.$doc.off(docEvents)
+                    .on(docEvents, this.getOption(ns.OPTIONS.ITEMS_SELECTOR), function (event) {
 
                         onOpenGalleryByUser.call(this, event, onSourceElementMove);
 
-                        onSourceElementMove = event.type === "touchmove";
+                        onSourceElementMove = event.type.match(/move/);
 
                     }.bind(this));
             }
@@ -1488,10 +1495,12 @@
 
                 if (ns.USE_TRANSITIONS) {
 
+                    duration = duration || ns.DEF_DURATION / 1000;
+
                     selfCSS.opacity = "";
 
-                    selfCSS[ns.TRANSITION_PROP] = "opacity " + (duration || ns.DEF_FIX_DURATION / 1000) + "s ease-in 0s, visibility 0s linear " + (duration || ns.DEF_FIX_DURATION / 1000) + "s";
-                    selfCSS[ns.TRANSITION_PROP + "Duration"] = (duration || ns.DEF_FIX_DURATION / 1000) + "s";
+                    selfCSS[ns.TRANSITION_PROP] = "opacity " + duration + "s ease-in 0s, visibility 0s linear " + duration + "s";
+                    selfCSS[ns.TRANSITION_PROP + "Duration"] = duration + "s";
 
                 } else {
 
@@ -1538,15 +1547,17 @@
                 return this;
             }
 
+            duration = duration || ns.DEF_DURATION / 1000;
+
             this.ignoreEvents = true;
 
             this.nextItem.getTrfCtrl().clearTransform();
 
             this.swapItemsBackwards();
 
-            this.nextItem.setAsNext(duration || ns.DEF_DURATION / 1000);
+            this.nextItem.setAsNext(duration);
 
-            this.currentItem.setAsCurrent(duration || ns.DEF_DURATION / 1000, function () {
+            this.currentItem.setAsCurrent(duration, function () {
 
                 this.prevItem.setAsPrev();
 
@@ -1595,15 +1606,17 @@
                 return this;
             }
 
+            duration = duration || ns.DEF_DURATION / 1000;
+
             this.ignoreEvents = true;
 
             this.prevItem.getTrfCtrl().clearTransform();
 
             this.swapItemsForwards();
 
-            this.prevItem.setAsPrev(duration || ns.DEF_DURATION / 1000);
+            this.prevItem.setAsPrev(duration);
 
-            this.currentItem.setAsCurrent(duration || ns.DEF_DURATION / 1000, function () {
+            this.currentItem.setAsCurrent(duration, function () {
 
                 this.nextItem.setAsNext();
 
@@ -1678,7 +1691,7 @@
 
         this.items.forEach(function (item) {
 
-            if (item !== this.currentItem && item !== this.prevItem && item !== this.nextItem) {
+            if (!~[this.currentItem, this.prevItem, this.nextItem].indexOf(item)) {
 
                 item.clearState();
             }
@@ -1689,27 +1702,30 @@
 
     mjGallery.prototype.resetToCurrent = function (duration) {
 
-        var currentTranslate = this.currentItem.getTrfCtrl().getTranslate(),
-            currentScale = this.currentItem.getTrfCtrl().getScale();
+        var trfCtrl = this.currentItem.getTrfCtrl(),
+            currentTranslate = trfCtrl.getTranslate(),
+            currentScale = trfCtrl.getScale();
 
         this.ignoreEvents = !!(currentTranslate.x || currentTranslate.y || currentScale.x !== 1);
 
-        this.currentItem.clearOpacity(duration || ns.DEF_DURATION / 1000)
+        duration = duration || ns.DEF_DURATION / 1000;
+
+        this.currentItem.clearOpacity(duration)
             .getTrfCtrl()
-            .clearTransform(duration || ns.DEF_DURATION / 1000, function () {
+            .clearTransform(duration, function () {
 
                 this.ignoreEvents = false;
                 this.allowScaleUpOnCancelCloseByScale = false;
 
             }.bind(this));
 
-        this.prevItem.clearOpacity(duration || ns.DEF_DURATION / 1000)
+        this.prevItem.clearOpacity(duration)
             .getTrfCtrl()
-            .clearTransform(duration || ns.DEF_DURATION / 1000);
+            .clearTransform(duration);
 
-        this.nextItem.clearOpacity(duration || ns.DEF_DURATION / 1000)
+        this.nextItem.clearOpacity(duration)
             .getTrfCtrl()
-            .clearTransform(duration || ns.DEF_DURATION / 1000);
+            .clearTransform(duration);
 
         this.resetScroll();
 
