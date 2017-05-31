@@ -30,9 +30,7 @@
         //neprůhlednost překryvu
         OVERLAY_OPACITY: "overlay", //Number
 
-        //zobrazit informace nahoře - název a pozice
-        // - v případě, že je zobrazení pozice vypnuto a není nastaven title, výchozí hodnota je false
-        //zobrazit informace o položce - název a popis
+        //zobrazit informace o položce - název, popis, pozice
         // - přednost mají nastavení ITEM_TITLE_SELECTOR a ITEM_DESCRIPTION_SELECTOR
         // - poté mají prednost vlastní atributy - data-mjg-title a data-mjg-description
         // - dále - název:

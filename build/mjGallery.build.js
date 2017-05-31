@@ -229,8 +229,6 @@
 
             if (ns.USE_TRANSITIONS) {
 
-                this.$self.removeClass(ns.CLASS.selfActive);
-
                 this.$self.off(this.withNS(ns.TRANSITIONEND))
                     .on(this.withNS(ns.TRANSITIONEND),  function (event) {
 
@@ -249,6 +247,8 @@
 
                     }.bind(this));
 
+                this.$self.removeClass(ns.CLASS.selfActive);
+
             } else {
 
                 this.$self.stop()
@@ -261,6 +261,11 @@
                         afterCloseAnimation.call(this);
 
                     }.bind(this));
+            }
+
+            if (this.currentItem.isZoomedIn()) {
+
+                this.currentItem.zoom(1, undefined, true, true);
             }
         },
 
@@ -1483,11 +1488,6 @@
             this.closed = true;
 
             var selfCSS = {};
-
-            if (this.currentItem.isZoomedIn()) {
-
-                this.currentItem.zoom(1, undefined, true, true);
-            }
 
             if (translate || scale) {
 
@@ -3216,9 +3216,7 @@
         //neprůhlednost překryvu
         OVERLAY_OPACITY: "overlay", //Number
 
-        //zobrazit informace nahoře - název a pozice
-        // - v případě, že je zobrazení pozice vypnuto a není nastaven title, výchozí hodnota je false
-        //zobrazit informace o položce - název a popis
+        //zobrazit informace o položce - název, popis, pozice
         // - přednost mají nastavení ITEM_TITLE_SELECTOR a ITEM_DESCRIPTION_SELECTOR
         // - poté mají prednost vlastní atributy - data-mjg-title a data-mjg-description
         // - dále - název:
@@ -6505,7 +6503,6 @@
 
         this.clearTransform()
             .setTransition(duration ? ns.TRANSFORM_PREFIX + "transform " + duration + "s, opacity " + (duration / 4) + "s" : "");
-
 
         if (translate) {
 

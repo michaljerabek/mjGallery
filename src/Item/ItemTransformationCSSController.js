@@ -195,7 +195,6 @@
         this.clearTransform()
             .setTransition(duration ? ns.TRANSFORM_PREFIX + "transform " + duration + "s, opacity " + (duration / 4) + "s" : "");
 
-
         if (translate) {
 
             this.item.get().addClass(ns.CLASS["itemClosing" + (dir === ns.DIR.UP ? "Up" : "Down")]);

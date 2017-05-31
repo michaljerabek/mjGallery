@@ -229,8 +229,6 @@
 
             if (ns.USE_TRANSITIONS) {
 
-                this.$self.removeClass(ns.CLASS.selfActive);
-
                 this.$self.off(this.withNS(ns.TRANSITIONEND))
                     .on(this.withNS(ns.TRANSITIONEND),  function (event) {
 
@@ -249,6 +247,8 @@
 
                     }.bind(this));
 
+                this.$self.removeClass(ns.CLASS.selfActive);
+
             } else {
 
                 this.$self.stop()
@@ -261,6 +261,11 @@
                         afterCloseAnimation.call(this);
 
                     }.bind(this));
+            }
+
+            if (this.currentItem.isZoomedIn()) {
+
+                this.currentItem.zoom(1, undefined, true, true);
             }
         },
 
@@ -1483,11 +1488,6 @@
             this.closed = true;
 
             var selfCSS = {};
-
-            if (this.currentItem.isZoomedIn()) {
-
-                this.currentItem.zoom(1, undefined, true, true);
-            }
 
             if (translate || scale) {
 
