@@ -89,7 +89,7 @@
 }
 
 .mj-gallery__hide-scrollbars--margin body {
-/*    max-height: 100vh; ???*/
+    max-height: 100vh;
 
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -99,7 +99,7 @@
 }
 
 .mj-gallery__hide-scrollbars--padding body {
-/*    max-height: 100vh; ???*/
+    max-height: 100vh;
 
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
