@@ -6,25 +6,23 @@
     var NS = "UIController",
 
         pointerMovedOnBtn = false,
-        preventCloseOnOverlay = false,
 
         shiftKey = false,
 
         onOverlay = function (event) {
 
+            //ev. delegation je na tři vnořené elementy -> zbylé dva jsou zbytečné
+            event.stopPropagation();
+
+            //pokud nastane move, ke clicku se vůbec nechceme dostat
+            this.mjGallery.get().off(this.mjGallery.withNS(".onOverlay" + NS));
+
             var onOverlay = this.mjGallery.getCurrentItem().considerEventAsOnOverlay(event);
-
-            if (event.type.match(/move/)) {
-
-                preventCloseOnOverlay = true;
-            }
 
             //při psunutí myši/prstu nezavírat
             if (event.type.match(/move/) && onOverlay) {
 
                 this.mjGallery.get().off(this.mjGallery.withNS(".onOverlay" + NS));
-
-                preventCloseOnOverlay = false;
 
                 //uživatel posouvá obrázkem => zachovat události
                 if (this.mjGallery.eventsActive) {
@@ -35,9 +33,7 @@
                 return false;
             }
 
-            if (!preventCloseOnOverlay && onOverlay && !event.type.match(/move/)) {
-
-                preventCloseOnOverlay = false;
+            if (onOverlay && !event.type.match(/move/)) {
 
                 this.mjGallery.get().off(this.mjGallery.withNS(".onOverlay" + NS));
 
