@@ -3809,6 +3809,7 @@
     var NS = "UIController",
 
         pointerMovedOnBtn = false,
+        preventCloseOnOverlay = false,
 
         shiftKey = false,
 
@@ -3816,10 +3817,17 @@
 
             var onOverlay = this.mjGallery.getCurrentItem().considerEventAsOnOverlay(event);
 
+            if (event.type.match(/move/)) {
+
+                preventCloseOnOverlay = true;
+            }
+
             //při psunutí myši/prstu nezavírat
             if (event.type.match(/move/) && onOverlay) {
 
                 this.mjGallery.get().off(this.mjGallery.withNS(".onOverlay" + NS));
+
+                preventCloseOnOverlay = false;
 
                 //uživatel posouvá obrázkem => zachovat události
                 if (this.mjGallery.eventsActive) {
@@ -3830,7 +3838,11 @@
                 return false;
             }
 
-            if (onOverlay && !event.type.match(/move/)) {
+            if (!preventCloseOnOverlay && onOverlay && !event.type.match(/move/)) {
+
+                preventCloseOnOverlay = false;
+
+                this.mjGallery.get().off(this.mjGallery.withNS(".onOverlay" + NS));
 
                 this.mjGallery.close();
 
