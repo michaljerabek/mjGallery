@@ -3814,13 +3814,16 @@
 
         onOverlay = function (event) {
 
-            //ev. delegation je na tři vnořené elementy -> zbylé dva jsou zbytečné
-            event.stopPropagation();
-
             //pokud nastane move, ke clicku se vůbec nechceme dostat
             this.mjGallery.get().off(this.mjGallery.withNS(".onOverlay" + NS));
 
             var onOverlay = this.mjGallery.getCurrentItem().considerEventAsOnOverlay(event);
+
+            if (onOverlay) {
+
+                //ev. delegation je na tři vnořené elementy -> zbylé dva jsou zbytečné
+                event.stopPropagation();
+            }
 
             //při psunutí myši/prstu nezavírat
             if (event.type.match(/move/) && onOverlay) {
