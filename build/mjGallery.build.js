@@ -661,7 +661,7 @@
 
             this.itemDirFix = this.itemDirFix || this.pointer.dirFix({
                 dir: ns.Pointer.DIR.VER,
-                value: this.pointer.isTouch() ? 9 : 0
+                value: this.pointer.isTouch() ? 2 : 0
             });
 
             var translate = this.currentItem.getTrfCtrl().getTranslate();
@@ -3725,11 +3725,11 @@
 
             if (tolerance.dir === Pointer.DIR.VER) {
 
-                return this.horFix() || Math.abs(this.diff.y) < tolerance.value ? Pointer.FIX.HOR : Pointer.FIX.VER;
+                return this.horFix() || Math.abs(this.diff.y / (this.diff.x || 0.1)) < tolerance.value ? Pointer.FIX.HOR : Pointer.FIX.VER;
 
             } else {
 
-                return this.horFix() || Math.abs(this.diff.x) < tolerance.value ? Pointer.FIX.HOR : Pointer.FIX.VER;
+                return this.horFix() || Math.abs(this.diff.x / (this.diff.y || 0.1)) < tolerance.value ? Pointer.FIX.HOR : Pointer.FIX.VER;
             }
         }
 
@@ -5869,6 +5869,13 @@
     Item.prototype.edgeAnim = function (/*dir, done*/) {
 
         this.trfCtrl.edgeAnim.apply(this.trfCtrl, arguments);
+
+        return this;
+    };
+
+    Item.prototype.scale = function (/*value, useCurrentTranslate, duration*/) {
+
+        this.trfCtrl.scale.apply(this.trfCtrl, arguments);
 
         return this;
     };

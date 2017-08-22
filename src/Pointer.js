@@ -269,11 +269,11 @@
 
             if (tolerance.dir === Pointer.DIR.VER) {
 
-                return this.horFix() || Math.abs(this.diff.y) < tolerance.value ? Pointer.FIX.HOR : Pointer.FIX.VER;
+                return this.horFix() || Math.abs(this.diff.y / (this.diff.x || 0.1)) < tolerance.value ? Pointer.FIX.HOR : Pointer.FIX.VER;
 
             } else {
 
-                return this.horFix() || Math.abs(this.diff.x) < tolerance.value ? Pointer.FIX.HOR : Pointer.FIX.VER;
+                return this.horFix() || Math.abs(this.diff.x / (this.diff.y || 0.1)) < tolerance.value ? Pointer.FIX.HOR : Pointer.FIX.VER;
             }
         }
 

@@ -903,6 +903,13 @@
         return this;
     };
 
+    Item.prototype.scale = function (/*value, useCurrentTranslate, duration*/) {
+
+        this.trfCtrl.scale.apply(this.trfCtrl, arguments);
+
+        return this;
+    };
+
     Item.prototype.on = function (type, cb, off) {
 
         if (off) {

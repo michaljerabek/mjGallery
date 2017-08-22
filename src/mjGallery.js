@@ -661,7 +661,7 @@
 
             this.itemDirFix = this.itemDirFix || this.pointer.dirFix({
                 dir: ns.Pointer.DIR.VER,
-                value: this.pointer.isTouch() ? 9 : 0
+                value: this.pointer.isTouch() ? 2 : 0
             });
 
             var translate = this.currentItem.getTrfCtrl().getTranslate();
