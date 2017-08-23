@@ -911,6 +911,7 @@
         onItemStart = function (event) {
 
             this.focusOnEnd = false;
+            this.zoomMode = false;
 
             if (this.currentItem.shouldPreserveEvent(ns.EVENTS.POINTER, event)) {
 
@@ -1199,7 +1200,9 @@
         return this;
     };
 
-    mjGallery.prototype.refresh = function (options) {
+    mjGallery.prototype.refresh = function (options, mergeOptions) {
+
+        options = mergeOptions ? $.extend({}, this.options.getOriginal(), options) : options;
 
         var beforeRefreshEvent = new ns.EVENT.Event({
             current: this.getCurrentItemAPI(),
@@ -2169,6 +2172,7 @@
         selfWhite: ns.BEM(null, "white"),
         selfKeyboardFocus: ns.BEM(null, "keyboard-focus"),
         selfGrabbing: ns.BEM(null, "grabbing"),
+        selfUIHidden: ns.BEM(null, "ui-hidden"),
 
         overlay: ns.BEM("overlay"),
 
@@ -2179,6 +2183,7 @@
         positionCurrent: ns.BEM("current"),
         positionTotal: ns.BEM("total"),
 
+        ui: ns.BEM("ui"),
         controller: ns.BEM("controller"),
         controllerToolbar: ns.BEM("controller-toolbar"),
         btn: ns.BEM("btn"),
@@ -2233,6 +2238,7 @@
         html: ns.BEM("item-content", "html"),
         video: ns.BEM("item-content", "video"),
 
+        itemInfoWrapper: ns.BEM("item-info-wrapper"),
         itemInfo: ns.BEM("item-info"),
         itemInfoNoContent: ns.BEM("item-info", "no-content"),
         itemInfoContent: ns.BEM("item-info-content"),
@@ -2568,31 +2574,35 @@
 
                     "<div class=\"" + ns.CLASS.overlay  + "\"></div>",
 
-                    "<div class=\"" + ns.CLASS.info + "\">",
+                    "<div class=\"" + ns.CLASS.ui + "\">",
 
-                        //POSITION
+                        "<div class=\"" + ns.CLASS.info + "\">",
 
-                    "</div>",
-
-                    "<div class=\"" + ns.CLASS.controller + "\">",
-
-                        "<div class=\"" + ns.CLASS.controllerToolbar + "\">",
-
-                            data.closeBtn ? ns.TEMPLATE.BUTTON("close", ns.CLASS.btnClose, ns.TEMPLATE.ICON.CLOSE()) : "",
-
-                            data.infoBtn ? ns.TEMPLATE.BUTTON("toggleInfo", ns.CLASS.btnToggleInfo, ns.TEMPLATE.ICON.INFO()) : "",
-
-                            data.zoomBtn ? ns.TEMPLATE.BUTTON("toggleZoom", ns.CLASS.btnToggleZoom, ns.TEMPLATE.ICON.ZOOM_IN() + ns.TEMPLATE.ICON.ZOOM_OUT()) : "",
-
-                            data.fullscreenBtn ? ns.TEMPLATE.BUTTON("fullscreen", ns.CLASS.btnFullscreen, ns.TEMPLATE.ICON.FULLSCREEN_ON() + ns.TEMPLATE.ICON.FULLSCREEN_OFF()) : "",
+                            //POSITION
 
                         "</div>",
 
-                        "<div class=\"" + ns.CLASS.arrows + "\">",
+                        "<div class=\"" + ns.CLASS.controller + "\">",
 
-                            ns.TEMPLATE.BUTTON("prev", [ns.CLASS.arrow, ns.CLASS.arrowLeft].join(" "), ns.TEMPLATE.ICON.ARROW_LEFT() + ns.TEMPLATE.ICON.ARROW_END()),
+                            "<div class=\"" + ns.CLASS.controllerToolbar + "\">",
 
-                            ns.TEMPLATE.BUTTON("next", [ns.CLASS.arrow, ns.CLASS.arrowRight].join(" "), ns.TEMPLATE.ICON.ARROW_RIGHT() + ns.TEMPLATE.ICON.ARROW_START()),
+                                data.closeBtn ? ns.TEMPLATE.BUTTON("close", ns.CLASS.btnClose, ns.TEMPLATE.ICON.CLOSE()) : "",
+
+                                data.infoBtn ? ns.TEMPLATE.BUTTON("toggleInfo", ns.CLASS.btnToggleInfo, ns.TEMPLATE.ICON.INFO()) : "",
+
+                                data.zoomBtn ? ns.TEMPLATE.BUTTON("toggleZoom", ns.CLASS.btnToggleZoom, ns.TEMPLATE.ICON.ZOOM_IN() + ns.TEMPLATE.ICON.ZOOM_OUT()) : "",
+
+                                data.fullscreenBtn ? ns.TEMPLATE.BUTTON("fullscreen", ns.CLASS.btnFullscreen, ns.TEMPLATE.ICON.FULLSCREEN_ON() + ns.TEMPLATE.ICON.FULLSCREEN_OFF()) : "",
+
+                            "</div>",
+
+                            "<div class=\"" + ns.CLASS.arrows + "\">",
+
+                                ns.TEMPLATE.BUTTON("prev", [ns.CLASS.arrow, ns.CLASS.arrowLeft].join(" "), ns.TEMPLATE.ICON.ARROW_LEFT() + ns.TEMPLATE.ICON.ARROW_END()),
+
+                                ns.TEMPLATE.BUTTON("next", [ns.CLASS.arrow, ns.CLASS.arrowRight].join(" "), ns.TEMPLATE.ICON.ARROW_RIGHT() + ns.TEMPLATE.ICON.ARROW_START()),
+
+                            "</div>",
 
                         "</div>",
 
@@ -2604,9 +2614,13 @@
 
                     "</ul>",
 
-                    "<div class=\"" + ns.CLASS.itemInfo + " " + ns.CLASS.itemInfoNoContent + "\">",
+                    "<div class=\"" + ns.CLASS.itemInfoWrapper + "\">",
 
-                        //ITEM_INFO_CONTENT
+                        "<div class=\"" + ns.CLASS.itemInfo + " " + ns.CLASS.itemInfoNoContent + "\">",
+
+                            //ITEM_INFO_CONTENT
+
+                        "</div>",
 
                     "</div>",
 
@@ -3213,6 +3227,9 @@
         //bílá varianta
         WHITE_UI: "white", //Boolean
 
+        //automaticky skrývat ovládací prvky
+        AUTO_HIDE_UI: "autoHide", //Boolean
+
         //neprůhlednost překryvu
         OVERLAY_OPACITY: "overlay", //Number
 
@@ -3359,6 +3376,7 @@
     DEFAULTS[ns.OPTIONS.FULL_SIZE_ITEMS] = false;
     DEFAULTS[ns.OPTIONS.CONTENT_OBJECT_FIT_COVER] = false;
     DEFAULTS[ns.OPTIONS.WHITE_UI] = false;
+    DEFAULTS[ns.OPTIONS.AUTO_HIDE_UI] = true;
     DEFAULTS[ns.OPTIONS.OVERLAY_OPACITY] = 0.85;
     DEFAULTS[ns.OPTIONS.SHOW_INFO] = true;
     DEFAULTS[ns.OPTIONS.SHOW_POSITION] = true;
@@ -3808,9 +3826,39 @@
 
     var NS = "UIController",
 
+        HIDE_UI_TIMEOUT = 3000,
+        HIDE_UI_TOUCH_TIMEOUT = 4000,
+
         pointerMovedOnBtn = false,
 
+        wasTouchOnBtn = false,
+
         shiftKey = false,
+
+        toggleUITimeout = null,
+        uiVisible = true,
+
+        toggleUI = function (visible, timeout) {
+
+            if (visible) {
+
+                uiVisible = true;
+
+                this.mjGallery.get()
+                    .removeClass(ns.CLASS.selfUIHidden);
+            }
+
+            clearTimeout(toggleUITimeout);
+
+            toggleUITimeout = setTimeout(function() {
+
+                this.mjGallery.get()
+                    .addClass(ns.CLASS.selfUIHidden);
+
+                uiVisible = false;
+
+            }.bind(this), typeof timeout === "number" ? timeout : HIDE_UI_TIMEOUT);
+        },
 
         onOverlay = function (event) {
 
@@ -3841,6 +3889,13 @@
 
             if (onOverlay && !event.type.match(/move/)) {
 
+                if (!uiVisible && this.mjGallery.getCurrentItem().stealsPointer && event.type.match(/touch/)) {
+
+                    toggleUI.call(this, true, HIDE_UI_TOUCH_TIMEOUT);
+
+                    return false;
+                }
+
                 this.mjGallery.get().off(this.mjGallery.withNS(".onOverlay" + NS));
 
                 this.mjGallery.close();
@@ -3855,13 +3910,24 @@
 
         tapOnAction = function (event) {
 
+            if (event.type.match(/touch/)) {
+
+                wasTouchOnBtn = true;
+
+            } else if (wasTouchOnBtn) {
+
+                wasTouchOnBtn = false;
+
+                return false;
+            }
+
             if (pointerMovedOnBtn || this.mjGallery.ignoreEvents || (event.type.match(/touch/) && event.originalEvent.touches.length)) {
 
                 pointerMovedOnBtn = false;
 
                 event.preventDefault();
 
-                return;
+                return false;
             }
 
             var $btn = ns.$t(event.target).closest(ns.DATA.selector("action"));
@@ -4134,6 +4200,74 @@
             this.$zoomBtn[event.zoomedIn ? "addClass" : "removeClass"](ns.CLASS.btnToggleZoomActive);
         },
 
+        hideUIOnTouchendOnInfo = function (event) {
+
+            if (uiVisible && !this.mjGallery.pointer.moved && !ns.$t(event.target).closest(ns.DATA.selector("action")).length) {
+
+                toggleUI.call(this, false, 0);
+
+                return false;
+            }
+        },
+
+        initToggleUI = function () {
+
+            var wasTouchmove = false,
+                wasTouch = false;
+
+            this.mjGallery.get().on(this.mjGallery.withNS("touchend." + NS, "touchmove." + NS), function (event) {
+
+                if (event.type.match(/move/)) {
+
+                    wasTouchmove = true;
+
+                    return;
+                }
+
+                wasTouch = true;
+
+                if (!wasTouchmove && !ns.$t(event.target).closest(ns.DATA.selector("action") + ", " + ns.FOCUSABLE).length) {
+
+                    toggleUI.call(this, !uiVisible, uiVisible ? 0 : HIDE_UI_TOUCH_TIMEOUT);
+
+                    wasTouchmove = false;
+
+                    return;
+                }
+
+                toggleUI.call(this, uiVisible, HIDE_UI_TOUCH_TIMEOUT);
+
+                wasTouchmove = false;
+
+            }.bind(this));
+
+            this.mjGallery.get().on(this.mjGallery.withNS("mousemove." + NS, "mouseout." + NS), function (event) {
+
+                if (wasTouch) {
+
+                    wasTouch = false;
+
+                    return;
+                }
+
+                if (event.type.match(/move/)) {
+
+                    toggleUI.call(this, true);
+
+                    return;
+                }
+
+                if ((event.toElement === null || event.relatedTarget === null)) {
+
+                    toggleUI.call(this, false, 0);
+                }
+
+            }.bind(this));
+
+            this.mjGallery.infoController.$info.on(this.mjGallery.withNS("touchend." + NS), hideUIOnTouchendOnInfo.bind(this));
+            this.mjGallery.infoController.$itemInfo.on(this.mjGallery.withNS("touchend." + NS), hideUIOnTouchendOnInfo.bind(this));
+        },
+
         initEvents = function () {
 
             //zakázat posouvání stránky na infoControlleru (nahoře)
@@ -4147,6 +4281,12 @@
 
                 return false;
             });
+
+            //skrýt/zobrazit ui
+            if (this.mjGallery.options.is(ns.OPTIONS.AUTO_HIDE_UI, true)) {
+
+                initToggleUI.call(this);
+            }
 
             //ovládání klávesnicí
             ns.$win.on(this.mjGallery.withNS("keyup." + NS), onKeyup.bind(this));
@@ -4207,6 +4347,13 @@
 
         destroyEvents = function () {
 
+            //zakázat posouvání stránky na UIControlleru
+            this.$self.off(this.mjGallery.withNS("touchmove." + NS));
+
+            //skrýt/zobrazit ui
+            this.mjGallery.infoController.$info.off(this.mjGallery.withNS("touchend." + NS));
+            this.mjGallery.infoController.$itemInfo.off(this.mjGallery.withNS("touchend." + NS));
+
             //zakázat posouvání stránky na infoControlleru (nahoře)
             this.infoController.get().off(this.mjGallery.withNS("touchmove." + NS));
 
@@ -4217,11 +4364,12 @@
             //ovládání klávesnicí
             //zakázat posouvání stránky myší + ovládání kolečkem
             //zrušit předchozí informaci o posunu myší/prstem
-            ns.$win.off(this.mjGallery.withNS("focusin." + NS, "scroll." + NS, "DOMMouseScroll." + NS, "mousewheel." + NS, "touchstart." + NS, "mousedown." + NS, "keyup." + NS, "keydown." + NS));
+            ns.$win.off(this.mjGallery.withNS("focusin." + NS, "scroll." + NS, "DOMMouseScroll." + NS, "mousewheel." + NS, "touchstart." + NS, "mousedown." + NS, "mousemove." + NS, "keyup." + NS, "keydown." + NS));
 
             //zavřít tapnutím na overlay (ve skutečnosti na item nebo view)
             //ovládání tlačítky
-            this.mjGallery.get().off(this.mjGallery.withNS("click." + NS, "touchend." + NS, "touchmove." + NS, "mousemove." + NS));
+            //skrýt/zobrazit ui
+            this.mjGallery.get().off(this.mjGallery.withNS("click." + NS, "touchend." + NS, "touchmove." + NS, "mousemove." + NS, "mouseout." + NS));
         },
 
         toggleArrow = function (which, enable, init) {
@@ -4284,6 +4432,11 @@
             toggleZoomBtn.call(this);
 
             initArrows.call(this);
+
+            if (this.mjGallery.options.is(ns.OPTIONS.AUTO_HIDE_UI, true)) {
+
+                toggleUI.call(this, true);
+            }
         },
 
         onBeforeChange = function () {
@@ -5013,6 +5166,8 @@
             this.API = new APIClass(this);
 
             this.prev = this.next = this.current = false;
+
+            this.stealsPointer = this.stealsPointer || false;
 
             this.zoomable = this.zoomable || false;
             this.zoomValue = 1;
@@ -6159,6 +6314,8 @@
 
             this.type = ns.Item.TYPE.IFRAME;
 
+            this.stealsPointer = true;
+
             ns.Item.call(this, $source, mjGallery, index, IframeAPI);
         };
 
@@ -6885,6 +7042,8 @@
 
             this.type = ns.Item.TYPE.YOUTUBE;
 
+            this.stealsPointer = true;
+
             ns.Item.call(this, $source, mjGallery, index, VideoItemAPI);
 
             this.pauseVideoBeforeClose = function () {
@@ -7269,6 +7428,8 @@
 
             this.type = ns.Item.TYPE.VIMEO;
 
+            this.stealsPointer = true;
+
             ns.Item.call(this, $source, mjGallery, index, VimeoItemAPI);
 
             this.pauseVideoBeforeClose = function () {
@@ -7650,6 +7811,8 @@
         YouTubeItem = ns.YouTubeItem = function YouTubeItem($source, mjGallery, index) {
 
             this.type = ns.Item.TYPE.YOUTUBE;
+
+            this.stealsPointer = true;
 
             ns.Item.call(this, $source, mjGallery, index, YouTubeItemAPI);
 

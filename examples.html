@@ -20,7 +20,7 @@
 </head>
 <body>
 
-  <script src="http://mjerabek.wz.cz/onScreenLog.js"></script>
+    <script src="http://mjerabek.wz.cz/onScreenLog.js"></script>
 
     <h1 hidden>mjGallery</h1>
 
@@ -265,7 +265,7 @@
 $(window).on("orientationchange", function () {
     example3.refresh({
         cover: window.innerWidth &gt; window.innerHeight
-    });
+    }, true); //true = merge options
 });</pre>
 
     <script>/*global mjGallery, $, window*/
@@ -286,7 +286,7 @@ $(window).on("orientationchange", function () {
         $(window).on("orientationchange", function () {
             example3.refresh({
                 cover: window.innerWidth > window.innerHeight
-            });
+            }, true);
         });
 
         $(".example3__code.html").text($(".example3__buttons").html().trim().replace(/\n        /g, "\n"));

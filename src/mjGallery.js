@@ -911,6 +911,7 @@
         onItemStart = function (event) {
 
             this.focusOnEnd = false;
+            this.zoomMode = false;
 
             if (this.currentItem.shouldPreserveEvent(ns.EVENTS.POINTER, event)) {
 
@@ -1199,7 +1200,9 @@
         return this;
     };
 
-    mjGallery.prototype.refresh = function (options) {
+    mjGallery.prototype.refresh = function (options, mergeOptions) {
+
+        options = mergeOptions ? $.extend({}, this.options.getOriginal(), options) : options;
 
         var beforeRefreshEvent = new ns.EVENT.Event({
             current: this.getCurrentItemAPI(),
