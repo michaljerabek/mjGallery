@@ -4219,7 +4219,7 @@
                         return;
                     }
 
-                    if (!(event.toElement || event.relatedTarget)) {
+                    if ((event.toElement === null || event.relatedTarget === null)) {
 
                         toggleUI.call(this, false, 0);
                     }
