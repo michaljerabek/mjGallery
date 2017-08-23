@@ -1200,7 +1200,9 @@
         return this;
     };
 
-    mjGallery.prototype.refresh = function (options) {
+    mjGallery.prototype.refresh = function (options, mergeOptions) {
+
+        options = mergeOptions ? $.extend({}, this.options.getOriginal(), options) : options;
 
         var beforeRefreshEvent = new ns.EVENT.Event({
             current: this.getCurrentItemAPI(),
