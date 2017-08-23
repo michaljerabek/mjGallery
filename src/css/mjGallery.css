@@ -336,6 +336,11 @@
     pointer-events: none;
 }
 
+.mj-gallery--ui-hidden.mj-gallery--keyboard-focus .mj-gallery__ui:focus-within {
+    opacity: 1;
+    pointer-events: auto;
+}
+
     .mj-gallery__arrows {
         position: fixed;
         top: 50%;

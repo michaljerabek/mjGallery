@@ -44,6 +44,8 @@
 
             this.prev = this.next = this.current = false;
 
+            this.stealsPointer = this.stealsPointer || false;
+
             this.zoomable = this.zoomable || false;
             this.zoomValue = 1;
 

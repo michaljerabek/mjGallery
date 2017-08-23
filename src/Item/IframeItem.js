@@ -21,6 +21,8 @@
 
             this.type = ns.Item.TYPE.IFRAME;
 
+            this.stealsPointer = true;
+
             ns.Item.call(this, $source, mjGallery, index, IframeAPI);
         };
 

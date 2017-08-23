@@ -52,6 +52,8 @@
 
             this.type = ns.Item.TYPE.VIMEO;
 
+            this.stealsPointer = true;
+
             ns.Item.call(this, $source, mjGallery, index, VimeoItemAPI);
 
             this.pauseVideoBeforeClose = function () {

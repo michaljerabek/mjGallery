@@ -10,6 +10,8 @@
 
         pointerMovedOnBtn = false,
 
+        wasTouchOnBtn = false,
+
         shiftKey = false,
 
         toggleUITimeout = null,
@@ -66,6 +68,13 @@
 
             if (onOverlay && !event.type.match(/move/)) {
 
+                if (!uiVisible && this.mjGallery.getCurrentItem().stealsPointer && event.type.match(/touch/)) {
+
+                    toggleUI.call(this, true, HIDE_UI_TOUCH_TIMEOUT);
+
+                    return false;
+                }
+
                 this.mjGallery.get().off(this.mjGallery.withNS(".onOverlay" + NS));
 
                 this.mjGallery.close();
@@ -80,13 +89,24 @@
 
         tapOnAction = function (event) {
 
+            if (event.type.match(/touch/)) {
+
+                wasTouchOnBtn = true;
+
+            } else if (wasTouchOnBtn) {
+
+                wasTouchOnBtn = false;
+
+                return false;
+            }
+
             if (pointerMovedOnBtn || this.mjGallery.ignoreEvents || (event.type.match(/touch/) && event.originalEvent.touches.length)) {
 
                 pointerMovedOnBtn = false;
 
                 event.preventDefault();
 
-                return;
+                return false;
             }
 
             var $btn = ns.$t(event.target).closest(ns.DATA.selector("action"));
@@ -359,6 +379,74 @@
             this.$zoomBtn[event.zoomedIn ? "addClass" : "removeClass"](ns.CLASS.btnToggleZoomActive);
         },
 
+        hideUIOnTouchendOnInfo = function (event) {
+
+            if (uiVisible && !this.mjGallery.pointer.moved && !ns.$t(event.target).closest(ns.DATA.selector("action")).length) {
+
+                toggleUI.call(this, false, 0);
+
+                return false;
+            }
+        },
+
+        initToggleUI = function () {
+
+            var wasTouchmove = false,
+                wasTouch = false;
+
+            this.mjGallery.get().on(this.mjGallery.withNS("touchend." + NS, "touchmove." + NS), function (event) {
+
+                if (event.type.match(/move/)) {
+
+                    wasTouchmove = true;
+
+                    return;
+                }
+
+                wasTouch = true;
+
+                if (!wasTouchmove && !ns.$t(event.target).closest(ns.DATA.selector("action") + ", " + ns.FOCUSABLE).length) {
+
+                    toggleUI.call(this, !uiVisible, uiVisible ? 0 : HIDE_UI_TOUCH_TIMEOUT);
+
+                    wasTouchmove = false;
+
+                    return;
+                }
+
+                toggleUI.call(this, uiVisible, HIDE_UI_TOUCH_TIMEOUT);
+
+                wasTouchmove = false;
+
+            }.bind(this));
+
+            this.mjGallery.get().on(this.mjGallery.withNS("mousemove." + NS, "mouseout." + NS), function (event) {
+
+                if (wasTouch) {
+
+                    wasTouch = false;
+
+                    return;
+                }
+
+                if (event.type.match(/move/)) {
+
+                    toggleUI.call(this, true);
+
+                    return;
+                }
+
+                if ((event.toElement === null || event.relatedTarget === null)) {
+
+                    toggleUI.call(this, false, 0);
+                }
+
+            }.bind(this));
+
+            this.mjGallery.infoController.$info.on(this.mjGallery.withNS("touchend." + NS), hideUIOnTouchendOnInfo.bind(this));
+            this.mjGallery.infoController.$itemInfo.on(this.mjGallery.withNS("touchend." + NS), hideUIOnTouchendOnInfo.bind(this));
+        },
+
         initEvents = function () {
 
             //zakázat posouvání stránky na infoControlleru (nahoře)
@@ -376,34 +464,7 @@
             //skrýt/zobrazit ui
             if (this.mjGallery.options.is(ns.OPTIONS.AUTO_HIDE_UI, true)) {
 
-                this.mjGallery.get().on(this.mjGallery.withNS("touchend." + NS), function (event) {
-
-                    if (!this.mjGallery.pointer.moved && !ns.$t(event.target).closest(ns.DATA.selector("action")).length) {
-
-                        toggleUI.call(this, !uiVisible, uiVisible ? 0 : HIDE_UI_TOUCH_TIMEOUT);
-
-                        return;
-                    }
-
-                    toggleUI.call(this, uiVisible, HIDE_UI_TOUCH_TIMEOUT);
-
-                }.bind(this));
-
-                this.mjGallery.get().on(this.mjGallery.withNS("mousemove." + NS, "mouseout." + NS), function (event) {
-
-                    if (event.type.match(/move/)) {
-
-                        toggleUI.call(this, true);
-
-                        return;
-                    }
-
-                    if ((event.toElement === null || event.relatedTarget === null)) {
-
-                        toggleUI.call(this, false, 0);
-                    }
-
-                }.bind(this));
+                initToggleUI.call(this);
             }
 
             //ovládání klávesnicí
@@ -464,6 +525,13 @@
         },
 
         destroyEvents = function () {
+
+            //zakázat posouvání stránky na UIControlleru
+            this.$self.off(this.mjGallery.withNS("touchmove." + NS));
+
+            //skrýt/zobrazit ui
+            this.mjGallery.infoController.$info.off(this.mjGallery.withNS("touchend." + NS));
+            this.mjGallery.infoController.$itemInfo.off(this.mjGallery.withNS("touchend." + NS));
 
             //zakázat posouvání stránky na infoControlleru (nahoře)
             this.infoController.get().off(this.mjGallery.withNS("touchmove." + NS));

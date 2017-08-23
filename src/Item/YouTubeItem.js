@@ -59,6 +59,8 @@
 
             this.type = ns.Item.TYPE.YOUTUBE;
 
+            this.stealsPointer = true;
+
             ns.Item.call(this, $source, mjGallery, index, YouTubeItemAPI);
 
             this.pauseVideoBeforeClose = function () {
