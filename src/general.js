@@ -383,6 +383,7 @@
         selfWhite: ns.BEM(null, "white"),
         selfKeyboardFocus: ns.BEM(null, "keyboard-focus"),
         selfGrabbing: ns.BEM(null, "grabbing"),
+        selfUIHidden: ns.BEM(null, "ui-hidden"),
 
         overlay: ns.BEM("overlay"),
 
@@ -393,6 +394,7 @@
         positionCurrent: ns.BEM("current"),
         positionTotal: ns.BEM("total"),
 
+        ui: ns.BEM("ui"),
         controller: ns.BEM("controller"),
         controllerToolbar: ns.BEM("controller-toolbar"),
         btn: ns.BEM("btn"),
@@ -447,6 +449,7 @@
         html: ns.BEM("item-content", "html"),
         video: ns.BEM("item-content", "video"),
 
+        itemInfoWrapper: ns.BEM("item-info-wrapper"),
         itemInfo: ns.BEM("item-info"),
         itemInfoNoContent: ns.BEM("item-info", "no-content"),
         itemInfoContent: ns.BEM("item-info-content"),

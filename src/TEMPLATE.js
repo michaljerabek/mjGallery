@@ -156,31 +156,35 @@
 
                     "<div class=\"" + ns.CLASS.overlay  + "\"></div>",
 
-                    "<div class=\"" + ns.CLASS.info + "\">",
+                    "<div class=\"" + ns.CLASS.ui + "\">",
 
-                        //POSITION
+                        "<div class=\"" + ns.CLASS.info + "\">",
 
-                    "</div>",
-
-                    "<div class=\"" + ns.CLASS.controller + "\">",
-
-                        "<div class=\"" + ns.CLASS.controllerToolbar + "\">",
-
-                            data.closeBtn ? ns.TEMPLATE.BUTTON("close", ns.CLASS.btnClose, ns.TEMPLATE.ICON.CLOSE()) : "",
-
-                            data.infoBtn ? ns.TEMPLATE.BUTTON("toggleInfo", ns.CLASS.btnToggleInfo, ns.TEMPLATE.ICON.INFO()) : "",
-
-                            data.zoomBtn ? ns.TEMPLATE.BUTTON("toggleZoom", ns.CLASS.btnToggleZoom, ns.TEMPLATE.ICON.ZOOM_IN() + ns.TEMPLATE.ICON.ZOOM_OUT()) : "",
-
-                            data.fullscreenBtn ? ns.TEMPLATE.BUTTON("fullscreen", ns.CLASS.btnFullscreen, ns.TEMPLATE.ICON.FULLSCREEN_ON() + ns.TEMPLATE.ICON.FULLSCREEN_OFF()) : "",
+                            //POSITION
 
                         "</div>",
 
-                        "<div class=\"" + ns.CLASS.arrows + "\">",
+                        "<div class=\"" + ns.CLASS.controller + "\">",
 
-                            ns.TEMPLATE.BUTTON("prev", [ns.CLASS.arrow, ns.CLASS.arrowLeft].join(" "), ns.TEMPLATE.ICON.ARROW_LEFT() + ns.TEMPLATE.ICON.ARROW_END()),
+                            "<div class=\"" + ns.CLASS.controllerToolbar + "\">",
 
-                            ns.TEMPLATE.BUTTON("next", [ns.CLASS.arrow, ns.CLASS.arrowRight].join(" "), ns.TEMPLATE.ICON.ARROW_RIGHT() + ns.TEMPLATE.ICON.ARROW_START()),
+                                data.closeBtn ? ns.TEMPLATE.BUTTON("close", ns.CLASS.btnClose, ns.TEMPLATE.ICON.CLOSE()) : "",
+
+                                data.infoBtn ? ns.TEMPLATE.BUTTON("toggleInfo", ns.CLASS.btnToggleInfo, ns.TEMPLATE.ICON.INFO()) : "",
+
+                                data.zoomBtn ? ns.TEMPLATE.BUTTON("toggleZoom", ns.CLASS.btnToggleZoom, ns.TEMPLATE.ICON.ZOOM_IN() + ns.TEMPLATE.ICON.ZOOM_OUT()) : "",
+
+                                data.fullscreenBtn ? ns.TEMPLATE.BUTTON("fullscreen", ns.CLASS.btnFullscreen, ns.TEMPLATE.ICON.FULLSCREEN_ON() + ns.TEMPLATE.ICON.FULLSCREEN_OFF()) : "",
+
+                            "</div>",
+
+                            "<div class=\"" + ns.CLASS.arrows + "\">",
+
+                                ns.TEMPLATE.BUTTON("prev", [ns.CLASS.arrow, ns.CLASS.arrowLeft].join(" "), ns.TEMPLATE.ICON.ARROW_LEFT() + ns.TEMPLATE.ICON.ARROW_END()),
+
+                                ns.TEMPLATE.BUTTON("next", [ns.CLASS.arrow, ns.CLASS.arrowRight].join(" "), ns.TEMPLATE.ICON.ARROW_RIGHT() + ns.TEMPLATE.ICON.ARROW_START()),
+
+                            "</div>",
 
                         "</div>",
 
@@ -192,9 +196,13 @@
 
                     "</ul>",
 
-                    "<div class=\"" + ns.CLASS.itemInfo + " " + ns.CLASS.itemInfoNoContent + "\">",
+                    "<div class=\"" + ns.CLASS.itemInfoWrapper + "\">",
 
-                        //ITEM_INFO_CONTENT
+                        "<div class=\"" + ns.CLASS.itemInfo + " " + ns.CLASS.itemInfoNoContent + "\">",
+
+                            //ITEM_INFO_CONTENT
+
+                        "</div>",
 
                     "</div>",
 

@@ -2170,6 +2170,7 @@
         selfWhite: ns.BEM(null, "white"),
         selfKeyboardFocus: ns.BEM(null, "keyboard-focus"),
         selfGrabbing: ns.BEM(null, "grabbing"),
+        selfUIHidden: ns.BEM(null, "ui-hidden"),
 
         overlay: ns.BEM("overlay"),
 
@@ -2180,6 +2181,7 @@
         positionCurrent: ns.BEM("current"),
         positionTotal: ns.BEM("total"),
 
+        ui: ns.BEM("ui"),
         controller: ns.BEM("controller"),
         controllerToolbar: ns.BEM("controller-toolbar"),
         btn: ns.BEM("btn"),
@@ -2234,6 +2236,7 @@
         html: ns.BEM("item-content", "html"),
         video: ns.BEM("item-content", "video"),
 
+        itemInfoWrapper: ns.BEM("item-info-wrapper"),
         itemInfo: ns.BEM("item-info"),
         itemInfoNoContent: ns.BEM("item-info", "no-content"),
         itemInfoContent: ns.BEM("item-info-content"),
@@ -2569,31 +2572,35 @@
 
                     "<div class=\"" + ns.CLASS.overlay  + "\"></div>",
 
-                    "<div class=\"" + ns.CLASS.info + "\">",
+                    "<div class=\"" + ns.CLASS.ui + "\">",
 
-                        //POSITION
+                        "<div class=\"" + ns.CLASS.info + "\">",
 
-                    "</div>",
-
-                    "<div class=\"" + ns.CLASS.controller + "\">",
-
-                        "<div class=\"" + ns.CLASS.controllerToolbar + "\">",
-
-                            data.closeBtn ? ns.TEMPLATE.BUTTON("close", ns.CLASS.btnClose, ns.TEMPLATE.ICON.CLOSE()) : "",
-
-                            data.infoBtn ? ns.TEMPLATE.BUTTON("toggleInfo", ns.CLASS.btnToggleInfo, ns.TEMPLATE.ICON.INFO()) : "",
-
-                            data.zoomBtn ? ns.TEMPLATE.BUTTON("toggleZoom", ns.CLASS.btnToggleZoom, ns.TEMPLATE.ICON.ZOOM_IN() + ns.TEMPLATE.ICON.ZOOM_OUT()) : "",
-
-                            data.fullscreenBtn ? ns.TEMPLATE.BUTTON("fullscreen", ns.CLASS.btnFullscreen, ns.TEMPLATE.ICON.FULLSCREEN_ON() + ns.TEMPLATE.ICON.FULLSCREEN_OFF()) : "",
+                            //POSITION
 
                         "</div>",
 
-                        "<div class=\"" + ns.CLASS.arrows + "\">",
+                        "<div class=\"" + ns.CLASS.controller + "\">",
 
-                            ns.TEMPLATE.BUTTON("prev", [ns.CLASS.arrow, ns.CLASS.arrowLeft].join(" "), ns.TEMPLATE.ICON.ARROW_LEFT() + ns.TEMPLATE.ICON.ARROW_END()),
+                            "<div class=\"" + ns.CLASS.controllerToolbar + "\">",
 
-                            ns.TEMPLATE.BUTTON("next", [ns.CLASS.arrow, ns.CLASS.arrowRight].join(" "), ns.TEMPLATE.ICON.ARROW_RIGHT() + ns.TEMPLATE.ICON.ARROW_START()),
+                                data.closeBtn ? ns.TEMPLATE.BUTTON("close", ns.CLASS.btnClose, ns.TEMPLATE.ICON.CLOSE()) : "",
+
+                                data.infoBtn ? ns.TEMPLATE.BUTTON("toggleInfo", ns.CLASS.btnToggleInfo, ns.TEMPLATE.ICON.INFO()) : "",
+
+                                data.zoomBtn ? ns.TEMPLATE.BUTTON("toggleZoom", ns.CLASS.btnToggleZoom, ns.TEMPLATE.ICON.ZOOM_IN() + ns.TEMPLATE.ICON.ZOOM_OUT()) : "",
+
+                                data.fullscreenBtn ? ns.TEMPLATE.BUTTON("fullscreen", ns.CLASS.btnFullscreen, ns.TEMPLATE.ICON.FULLSCREEN_ON() + ns.TEMPLATE.ICON.FULLSCREEN_OFF()) : "",
+
+                            "</div>",
+
+                            "<div class=\"" + ns.CLASS.arrows + "\">",
+
+                                ns.TEMPLATE.BUTTON("prev", [ns.CLASS.arrow, ns.CLASS.arrowLeft].join(" "), ns.TEMPLATE.ICON.ARROW_LEFT() + ns.TEMPLATE.ICON.ARROW_END()),
+
+                                ns.TEMPLATE.BUTTON("next", [ns.CLASS.arrow, ns.CLASS.arrowRight].join(" "), ns.TEMPLATE.ICON.ARROW_RIGHT() + ns.TEMPLATE.ICON.ARROW_START()),
+
+                            "</div>",
 
                         "</div>",
 
@@ -2605,9 +2612,13 @@
 
                     "</ul>",
 
-                    "<div class=\"" + ns.CLASS.itemInfo + " " + ns.CLASS.itemInfoNoContent + "\">",
+                    "<div class=\"" + ns.CLASS.itemInfoWrapper + "\">",
 
-                        //ITEM_INFO_CONTENT
+                        "<div class=\"" + ns.CLASS.itemInfo + " " + ns.CLASS.itemInfoNoContent + "\">",
+
+                            //ITEM_INFO_CONTENT
+
+                        "</div>",
 
                     "</div>",
 
@@ -3214,6 +3225,9 @@
         //bílá varianta
         WHITE_UI: "white", //Boolean
 
+        //automaticky skrývat ovládací prvky
+        AUTO_HIDE_UI: "autoHide", //Boolean
+
         //neprůhlednost překryvu
         OVERLAY_OPACITY: "overlay", //Number
 
@@ -3360,6 +3374,7 @@
     DEFAULTS[ns.OPTIONS.FULL_SIZE_ITEMS] = false;
     DEFAULTS[ns.OPTIONS.CONTENT_OBJECT_FIT_COVER] = false;
     DEFAULTS[ns.OPTIONS.WHITE_UI] = false;
+    DEFAULTS[ns.OPTIONS.AUTO_HIDE_UI] = true;
     DEFAULTS[ns.OPTIONS.OVERLAY_OPACITY] = 0.85;
     DEFAULTS[ns.OPTIONS.SHOW_INFO] = true;
     DEFAULTS[ns.OPTIONS.SHOW_POSITION] = true;
@@ -3809,9 +3824,37 @@
 
     var NS = "UIController",
 
+        HIDE_UI_TIMEOUT = 3000,
+        HIDE_UI_TOUCH_TIMEOUT = 4000,
+
         pointerMovedOnBtn = false,
 
         shiftKey = false,
+
+        toggleUITimeout = null,
+        uiVisible = true,
+
+        toggleUI = function (visible, timeout) {
+
+            if (visible) {
+
+                uiVisible = true;
+
+                this.mjGallery.get()
+                    .removeClass(ns.CLASS.selfUIHidden);
+            }
+
+            clearTimeout(toggleUITimeout);
+
+            toggleUITimeout = setTimeout(function() {
+
+                this.mjGallery.get()
+                    .addClass(ns.CLASS.selfUIHidden);
+
+                uiVisible = false;
+
+            }.bind(this), typeof timeout === "number" ? timeout : HIDE_UI_TIMEOUT);
+        },
 
         onOverlay = function (event) {
 
@@ -4149,6 +4192,39 @@
                 return false;
             });
 
+            //skrýt/zobrazit ui
+            if (this.mjGallery.options.is(ns.OPTIONS.AUTO_HIDE_UI, true)) {
+
+                this.mjGallery.get().on(this.mjGallery.withNS("touchend." + NS), function (event) {
+
+                    if (!this.mjGallery.pointer.moved && !ns.$t(event.target).closest(ns.DATA.selector("action")).length) {
+
+                        toggleUI.call(this, !uiVisible, uiVisible ? 0 : HIDE_UI_TOUCH_TIMEOUT);
+
+                        return;
+                    }
+
+                    toggleUI.call(this, uiVisible, HIDE_UI_TOUCH_TIMEOUT);
+
+                }.bind(this));
+
+                this.mjGallery.get().on(this.mjGallery.withNS("mousemove." + NS, "mouseout." + NS), function (event) {
+
+                    if (event.type.match(/move/)) {
+
+                        toggleUI.call(this, true);
+
+                        return;
+                    }
+
+                    if (!(event.toElement || event.relatedTarget)) {
+
+                        toggleUI.call(this, false, 0);
+                    }
+
+                }.bind(this));
+            }
+
             //ovládání klávesnicí
             ns.$win.on(this.mjGallery.withNS("keyup." + NS), onKeyup.bind(this));
             ns.$win.on(this.mjGallery.withNS("keydown." + NS), onKeydown.bind(this));
@@ -4218,11 +4294,12 @@
             //ovládání klávesnicí
             //zakázat posouvání stránky myší + ovládání kolečkem
             //zrušit předchozí informaci o posunu myší/prstem
-            ns.$win.off(this.mjGallery.withNS("focusin." + NS, "scroll." + NS, "DOMMouseScroll." + NS, "mousewheel." + NS, "touchstart." + NS, "mousedown." + NS, "keyup." + NS, "keydown." + NS));
+            ns.$win.off(this.mjGallery.withNS("focusin." + NS, "scroll." + NS, "DOMMouseScroll." + NS, "mousewheel." + NS, "touchstart." + NS, "mousedown." + NS, "mousemove." + NS, "keyup." + NS, "keydown." + NS));
 
             //zavřít tapnutím na overlay (ve skutečnosti na item nebo view)
             //ovládání tlačítky
-            this.mjGallery.get().off(this.mjGallery.withNS("click." + NS, "touchend." + NS, "touchmove." + NS, "mousemove." + NS));
+            //skrýt/zobrazit ui
+            this.mjGallery.get().off(this.mjGallery.withNS("click." + NS, "touchend." + NS, "touchmove." + NS, "mousemove." + NS, "mouseout." + NS));
         },
 
         toggleArrow = function (which, enable, init) {
@@ -4285,6 +4362,11 @@
             toggleZoomBtn.call(this);
 
             initArrows.call(this);
+
+            if (this.mjGallery.options.is(ns.OPTIONS.AUTO_HIDE_UI, true)) {
+
+                toggleUI.call(this, true);
+            }
         },
 
         onBeforeChange = function () {

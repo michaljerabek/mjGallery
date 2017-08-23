@@ -27,6 +27,9 @@
         //bílá varianta
         WHITE_UI: "white", //Boolean
 
+        //automaticky skrývat ovládací prvky
+        AUTO_HIDE_UI: "autoHide", //Boolean
+
         //neprůhlednost překryvu
         OVERLAY_OPACITY: "overlay", //Number
 
@@ -173,6 +176,7 @@
     DEFAULTS[ns.OPTIONS.FULL_SIZE_ITEMS] = false;
     DEFAULTS[ns.OPTIONS.CONTENT_OBJECT_FIT_COVER] = false;
     DEFAULTS[ns.OPTIONS.WHITE_UI] = false;
+    DEFAULTS[ns.OPTIONS.AUTO_HIDE_UI] = true;
     DEFAULTS[ns.OPTIONS.OVERLAY_OPACITY] = 0.85;
     DEFAULTS[ns.OPTIONS.SHOW_INFO] = true;
     DEFAULTS[ns.OPTIONS.SHOW_POSITION] = true;

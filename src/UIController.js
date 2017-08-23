@@ -5,9 +5,37 @@
 
     var NS = "UIController",
 
+        HIDE_UI_TIMEOUT = 3000,
+        HIDE_UI_TOUCH_TIMEOUT = 4000,
+
         pointerMovedOnBtn = false,
 
         shiftKey = false,
+
+        toggleUITimeout = null,
+        uiVisible = true,
+
+        toggleUI = function (visible, timeout) {
+
+            if (visible) {
+
+                uiVisible = true;
+
+                this.mjGallery.get()
+                    .removeClass(ns.CLASS.selfUIHidden);
+            }
+
+            clearTimeout(toggleUITimeout);
+
+            toggleUITimeout = setTimeout(function() {
+
+                this.mjGallery.get()
+                    .addClass(ns.CLASS.selfUIHidden);
+
+                uiVisible = false;
+
+            }.bind(this), typeof timeout === "number" ? timeout : HIDE_UI_TIMEOUT);
+        },
 
         onOverlay = function (event) {
 
@@ -345,6 +373,39 @@
                 return false;
             });
 
+            //skrýt/zobrazit ui
+            if (this.mjGallery.options.is(ns.OPTIONS.AUTO_HIDE_UI, true)) {
+
+                this.mjGallery.get().on(this.mjGallery.withNS("touchend." + NS), function (event) {
+
+                    if (!this.mjGallery.pointer.moved && !ns.$t(event.target).closest(ns.DATA.selector("action")).length) {
+
+                        toggleUI.call(this, !uiVisible, uiVisible ? 0 : HIDE_UI_TOUCH_TIMEOUT);
+
+                        return;
+                    }
+
+                    toggleUI.call(this, uiVisible, HIDE_UI_TOUCH_TIMEOUT);
+
+                }.bind(this));
+
+                this.mjGallery.get().on(this.mjGallery.withNS("mousemove." + NS, "mouseout." + NS), function (event) {
+
+                    if (event.type.match(/move/)) {
+
+                        toggleUI.call(this, true);
+
+                        return;
+                    }
+
+                    if (!(event.toElement || event.relatedTarget)) {
+
+                        toggleUI.call(this, false, 0);
+                    }
+
+                }.bind(this));
+            }
+
             //ovládání klávesnicí
             ns.$win.on(this.mjGallery.withNS("keyup." + NS), onKeyup.bind(this));
             ns.$win.on(this.mjGallery.withNS("keydown." + NS), onKeydown.bind(this));
@@ -414,11 +475,12 @@
             //ovládání klávesnicí
             //zakázat posouvání stránky myší + ovládání kolečkem
             //zrušit předchozí informaci o posunu myší/prstem
-            ns.$win.off(this.mjGallery.withNS("focusin." + NS, "scroll." + NS, "DOMMouseScroll." + NS, "mousewheel." + NS, "touchstart." + NS, "mousedown." + NS, "keyup." + NS, "keydown." + NS));
+            ns.$win.off(this.mjGallery.withNS("focusin." + NS, "scroll." + NS, "DOMMouseScroll." + NS, "mousewheel." + NS, "touchstart." + NS, "mousedown." + NS, "mousemove." + NS, "keyup." + NS, "keydown." + NS));
 
             //zavřít tapnutím na overlay (ve skutečnosti na item nebo view)
             //ovládání tlačítky
-            this.mjGallery.get().off(this.mjGallery.withNS("click." + NS, "touchend." + NS, "touchmove." + NS, "mousemove." + NS));
+            //skrýt/zobrazit ui
+            this.mjGallery.get().off(this.mjGallery.withNS("click." + NS, "touchend." + NS, "touchmove." + NS, "mousemove." + NS, "mouseout." + NS));
         },
 
         toggleArrow = function (which, enable, init) {
@@ -481,6 +543,11 @@
             toggleZoomBtn.call(this);
 
             initArrows.call(this);
+
+            if (this.mjGallery.options.is(ns.OPTIONS.AUTO_HIDE_UI, true)) {
+
+                toggleUI.call(this, true);
+            }
         },
 
         onBeforeChange = function () {
