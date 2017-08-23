@@ -911,6 +911,7 @@
         onItemStart = function (event) {
 
             this.focusOnEnd = false;
+            this.zoomMode = false;
 
             if (this.currentItem.shouldPreserveEvent(ns.EVENTS.POINTER, event)) {
 
