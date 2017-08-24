@@ -328,7 +328,7 @@
     z-index: 2;
 
     transition-property: opacity;
-    transition-delay: 0.3s;
+    transition-delay: 0s;
 }
 
 .mj-gallery--ui-hidden .mj-gallery__ui {
@@ -1019,7 +1019,7 @@
     width: 100%;
 
     transition-property: opacity;
-    transition-delay: 0.3s;
+    transition-delay: 0s;
 }
 
 .mj-gallery--ui-hidden .mj-gallery__item-info-wrapper {

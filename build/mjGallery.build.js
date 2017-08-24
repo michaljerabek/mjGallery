@@ -3828,6 +3828,7 @@
 
         HIDE_UI_TIMEOUT = 3000,
         HIDE_UI_TOUCH_TIMEOUT = 4000,
+        HIDE_UI_TOUCH_ON_ACTION_TIMEOUT = 10000,
 
         pointerMovedOnBtn = false,
 
@@ -3836,9 +3837,34 @@
         shiftKey = false,
 
         toggleUITimeout = null,
+        toggleUIDelay = 0,
         uiVisible = true,
+        mouseXY = { x: 0, y: 0 },
 
-        toggleUI = function (visible, timeout) {
+        POINTER_TYPE = {
+            TOUCH: "touch",
+            MOUSE: "mouse"
+        },
+
+        setAutoHideDelay = function (pointerType) {
+
+            if (pointerType === POINTER_TYPE.TOUCH && toggleUIDelay === 0) {
+
+                toggleUIDelay = 0.3;
+
+                this.$hidableUI.css(ns.TRANSITION_PROP + "Delay", toggleUIDelay + "s");
+
+            } else if (pointerType === POINTER_TYPE.MOUSE && toggleUIDelay !== 0) {
+
+                toggleUIDelay = 0;
+
+                this.$hidableUI.css(ns.TRANSITION_PROP + "Delay", toggleUIDelay + "s");
+            }
+        },
+
+        toggleUI = function (visible, timeout, pointerType) {
+
+            setAutoHideDelay.call(this, pointerType);
 
             if (visible) {
 
@@ -3851,6 +3877,16 @@
             clearTimeout(toggleUITimeout);
 
             toggleUITimeout = setTimeout(function() {
+
+                var elementUnderCursor = document.elementFromPoint(mouseXY.x, mouseXY.y);
+
+                //kurzor je nad skrývatelnými elementy -> neskrývat
+                if (ns.$t(elementUnderCursor).closest(ns.CLASS.selector("ui") + "," + ns.CLASS.selector("itemInfoWrapper")).length) {
+
+                    toggleUI.call(this, visible, typeof timeout === "number" ? timeout : HIDE_UI_TIMEOUT, pointerType);
+
+                    return;
+                }
 
                 this.mjGallery.get()
                     .addClass(ns.CLASS.selfUIHidden);
@@ -4204,7 +4240,7 @@
 
             if (uiVisible && !this.mjGallery.pointer.moved && !ns.$t(event.target).closest(ns.DATA.selector("action")).length) {
 
-                toggleUI.call(this, false, 0);
+                toggleUI.call(this, false, 0, POINTER_TYPE.TOUCH);
 
                 return false;
             }
@@ -4217,6 +4253,8 @@
 
             this.mjGallery.get().on(this.mjGallery.withNS("touchend." + NS, "touchmove." + NS), function (event) {
 
+                mouseXY = { x: -1, y: -1 };
+
                 if (event.type.match(/move/)) {
 
                     wasTouchmove = true;
@@ -4226,16 +4264,18 @@
 
                 wasTouch = true;
 
-                if (!wasTouchmove && !ns.$t(event.target).closest(ns.DATA.selector("action") + ", " + ns.FOCUSABLE).length) {
+                var onAction = ns.$t(event.target).closest(ns.DATA.selector("action")).length;
 
-                    toggleUI.call(this, !uiVisible, uiVisible ? 0 : HIDE_UI_TOUCH_TIMEOUT);
+                if (!wasTouchmove && !onAction && !ns.$t(event.target).closest(ns.FOCUSABLE).length) {
+
+                    toggleUI.call(this, !uiVisible, uiVisible ? 0 : HIDE_UI_TOUCH_TIMEOUT, POINTER_TYPE.TOUCH);
 
                     wasTouchmove = false;
 
                     return;
                 }
 
-                toggleUI.call(this, uiVisible, HIDE_UI_TOUCH_TIMEOUT);
+                toggleUI.call(this, uiVisible, onAction ? HIDE_UI_TOUCH_ON_ACTION_TIMEOUT : HIDE_UI_TOUCH_TIMEOUT, POINTER_TYPE.TOUCH);
 
                 wasTouchmove = false;
 
@@ -4252,14 +4292,19 @@
 
                 if (event.type.match(/move/)) {
 
-                    toggleUI.call(this, true);
+                    mouseXY.x = event.clientX;
+                    mouseXY.y = event.clientY;
+
+                    toggleUI.call(this, true, null, POINTER_TYPE.MOUSE);
 
                     return;
                 }
 
                 if ((event.toElement === null || event.relatedTarget === null)) {
 
-                    toggleUI.call(this, false, 0);
+                    mouseXY = { x: -1, y: -1 };
+
+                    toggleUI.call(this, false, 0, POINTER_TYPE.MOUSE);
                 }
 
             }.bind(this));
@@ -4501,6 +4546,8 @@
             this.$zoomBtn = this.mjGallery.get().find(ns.CLASS.selector("btnToggleZoom"));
             this.$fullscreenBtn = this.mjGallery.get().find(ns.CLASS.selector("btnFullscreen"));
             this.$infoBtn = this.mjGallery.get().find(ns.CLASS.selector("btnToggleInfo"));
+
+            this.$hidableUI = this.mjGallery.get().find(ns.CLASS.selector("ui") + ", " + ns.CLASS.selector("itemInfoWrapper"));
 
             this.$leftArrow = this.$self.find(ns.CLASS.selector("arrowLeft"));
             this.$rightArrow = this.$self.find(ns.CLASS.selector("arrowRight"));
