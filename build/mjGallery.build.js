@@ -634,6 +634,15 @@
             this.pointer.onMove(event);
 
             this.backFromEdge = false;
+
+            //odstranit události při dokončení zvětšování
+            if (this.pointerCountOnStart > 1 && this.pointer.count < 2 && !this.itemDirFix) {
+
+                ns.$win.trigger(this.withNS("touchend"));
+
+                return false;
+            }
+
             this.backFromScaleEdge = false;
 
             //pinch
@@ -919,6 +928,8 @@
             }
 
             this.pointer.onStart(event);
+
+            this.pointerCountOnStart = this.pointer.count;
 
             //probíhá animace nebo už jsou události move a up/end zaregistrované (aby se při více dotecích nespouštěly vícekrát)
             if (this.ignoreEvents || this.eventsActive || this.pointer.count > 2) {
@@ -3927,7 +3938,7 @@
 
                 if (!uiVisible && this.mjGallery.getCurrentItem().stealsPointer && event.type.match(/touch/)) {
 
-                    toggleUI.call(this, true, HIDE_UI_TOUCH_TIMEOUT);
+                    toggleUI.call(this, true, HIDE_UI_TOUCH_TIMEOUT, POINTER_TYPE.MOUSE); //tvrdíme, že je to mouse, protože při touchi na overlay je zbytečné očekávat dbltap (jo, mělo by se to udělat jinak)
 
                     return false;
                 }
@@ -3963,7 +3974,7 @@
 
                 event.preventDefault();
 
-                return false;
+                return;
             }
 
             var $btn = ns.$t(event.target).closest(ns.DATA.selector("action"));
