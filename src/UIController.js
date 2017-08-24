@@ -106,7 +106,7 @@
 
                 if (!uiVisible && this.mjGallery.getCurrentItem().stealsPointer && event.type.match(/touch/)) {
 
-                    toggleUI.call(this, true, HIDE_UI_TOUCH_TIMEOUT);
+                    toggleUI.call(this, true, HIDE_UI_TOUCH_TIMEOUT, POINTER_TYPE.MOUSE); //tvrdíme, že je to mouse, protože při touchi na overlay je zbytečné očekávat dbltap (jo, mělo by se to udělat jinak)
 
                     return false;
                 }
@@ -142,7 +142,7 @@
 
                 event.preventDefault();
 
-                return false;
+                return;
             }
 
             var $btn = ns.$t(event.target).closest(ns.DATA.selector("action"));

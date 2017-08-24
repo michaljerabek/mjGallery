@@ -1676,7 +1676,7 @@
             }
 
             .mj-gallery__item--html .mj-gallery__view {
-                overflow: initial;
+                /*overflow: initial; ???*/
             }
 
             .mj-gallery__item--vimeo .mj-gallery__view,
