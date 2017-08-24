@@ -20,20 +20,15 @@
         uiVisible = true,
         mouseXY = { x: 0, y: 0 },
 
-        POINTER_TYPE = {
-            TOUCH: "touch",
-            MOUSE: "mouse"
-        },
+        setAutoHideDelay = function (waitForDblTap) {
 
-        setAutoHideDelay = function (pointerType) {
-
-            if (pointerType === POINTER_TYPE.TOUCH && toggleUIDelay === 0) {
+            if (waitForDblTap && toggleUIDelay === 0) {
 
                 toggleUIDelay = 0.3;
 
                 this.$hidableUI.css(ns.TRANSITION_PROP + "Delay", toggleUIDelay + "s");
 
-            } else if (pointerType === POINTER_TYPE.MOUSE && toggleUIDelay !== 0) {
+            } else if (!waitForDblTap && toggleUIDelay !== 0) {
 
                 toggleUIDelay = 0;
 
@@ -41,9 +36,9 @@
             }
         },
 
-        toggleUI = function (visible, timeout, pointerType) {
+        toggleUI = function (visible, timeout, waitForDblTap) {
 
-            setAutoHideDelay.call(this, pointerType);
+            setAutoHideDelay.call(this, waitForDblTap);
 
             if (visible) {
 
@@ -62,7 +57,7 @@
                 //kurzor je nad skrývatelnými elementy -> neskrývat
                 if (ns.$t(elementUnderCursor).closest(ns.CLASS.selector("ui") + "," + ns.CLASS.selector("itemInfoWrapper")).length) {
 
-                    toggleUI.call(this, visible, typeof timeout === "number" ? timeout : HIDE_UI_TIMEOUT, pointerType);
+                    toggleUI.call(this, visible, typeof timeout === "number" ? timeout : HIDE_UI_TIMEOUT, waitForDblTap);
 
                     return;
                 }
@@ -106,7 +101,7 @@
 
                 if (!uiVisible && this.mjGallery.getCurrentItem().stealsPointer && event.type.match(/touch/)) {
 
-                    toggleUI.call(this, true, HIDE_UI_TOUCH_TIMEOUT, POINTER_TYPE.MOUSE); //tvrdíme, že je to mouse, protože při touchi na overlay je zbytečné očekávat dbltap (jo, mělo by se to udělat jinak)
+                    toggleUI.call(this, true, HIDE_UI_TOUCH_TIMEOUT, false);
 
                     return false;
                 }
@@ -419,7 +414,7 @@
 
             if (uiVisible && !this.mjGallery.pointer.moved && !ns.$t(event.target).closest(ns.DATA.selector("action")).length) {
 
-                toggleUI.call(this, false, 0, POINTER_TYPE.TOUCH);
+                toggleUI.call(this, false, 0, false);
 
                 return false;
             }
@@ -447,14 +442,14 @@
 
                 if (!wasTouchmove && !onAction && !ns.$t(event.target).closest(ns.FOCUSABLE).length) {
 
-                    toggleUI.call(this, !uiVisible, uiVisible ? 0 : HIDE_UI_TOUCH_TIMEOUT, POINTER_TYPE.TOUCH);
+                    toggleUI.call(this, !uiVisible, uiVisible ? 0 : HIDE_UI_TOUCH_TIMEOUT, true);
 
                     wasTouchmove = false;
 
                     return;
                 }
 
-                toggleUI.call(this, uiVisible, onAction ? HIDE_UI_TOUCH_ON_ACTION_TIMEOUT : HIDE_UI_TOUCH_TIMEOUT, POINTER_TYPE.TOUCH);
+                toggleUI.call(this, uiVisible, onAction ? HIDE_UI_TOUCH_ON_ACTION_TIMEOUT : HIDE_UI_TOUCH_TIMEOUT, true);
 
                 wasTouchmove = false;
 
@@ -474,7 +469,7 @@
                     mouseXY.x = event.clientX;
                     mouseXY.y = event.clientY;
 
-                    toggleUI.call(this, true, null, POINTER_TYPE.MOUSE);
+                    toggleUI.call(this, true, null, false);
 
                     return;
                 }
@@ -483,7 +478,7 @@
 
                     mouseXY = { x: -1, y: -1 };
 
-                    toggleUI.call(this, false, 0, POINTER_TYPE.MOUSE);
+                    toggleUI.call(this, false, 0, false);
                 }
 
             }.bind(this));
