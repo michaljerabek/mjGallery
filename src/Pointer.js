@@ -342,5 +342,10 @@
         return this.dblTap;
     };
 
+    Pointer.prototype.realMove = function () {
+
+        return this.diff.x !== 0 || this.diff.y !== 0;
+    };
+
 
 }(window.mjGallery, jQuery));
