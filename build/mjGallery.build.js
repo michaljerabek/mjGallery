@@ -633,15 +633,16 @@
 
             this.pointer.onMove(event);
 
+            if (!this.pointer.realMove()) {
+
+                event.preventDefault();
+
+                return;
+            }
+
             this.backFromEdge = false;
 
             //odstranit události při dokončení zvětšování
-            if (this.pointerCountOnStart > 1 && this.pointer.count < 2 && !this.itemDirFix) {
-
-                ns.$win.trigger(this.withNS("touchend"));
-
-                return false;
-            }
 
             this.backFromScaleEdge = false;
 
@@ -928,8 +929,6 @@
             }
 
             this.pointer.onStart(event);
-
-            this.pointerCountOnStart = this.pointer.count;
 
             //probíhá animace nebo už jsou události move a up/end zaregistrované (aby se při více dotecích nespouštěly vícekrát)
             if (this.ignoreEvents || this.eventsActive || this.pointer.count > 2) {
@@ -3825,6 +3824,11 @@
     Pointer.prototype.isDblTap = function () {
 
         return this.dblTap;
+    };
+
+    Pointer.prototype.realMove = function () {
+
+        return this.diff.x !== 0 || this.diff.y !== 0;
     };
 
 
