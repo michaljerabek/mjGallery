@@ -633,7 +633,7 @@
 
             this.pointer.onMove(event);
 
-            if (!this.pointer.realMove()) {
+            if (this.pointer.count === 1 && !this.pointer.realMove()) {
 
                 event.preventDefault();
 
@@ -642,7 +642,13 @@
 
             this.backFromEdge = false;
 
-            //odstranit události při dokončení zvětšování
+            //odstranit události při dokončení zvětšování (jo to tady nutné?)
+            if (this.pointerCountOnStart > 1 && this.pointer.count < 2 && !this.itemDirFix) {
+
+                ns.$win.trigger(this.withNS("touchend"));
+
+                return;
+            }
 
             this.backFromScaleEdge = false;
 
@@ -929,6 +935,8 @@
             }
 
             this.pointer.onStart(event);
+
+            this.pointerCountOnStart = this.pointer.count;
 
             //probíhá animace nebo už jsou události move a up/end zaregistrované (aby se při více dotecích nespouštěly vícekrát)
             if (this.ignoreEvents || this.eventsActive || this.pointer.count > 2) {
