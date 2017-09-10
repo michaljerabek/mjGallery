@@ -383,6 +383,18 @@
         this.loading = false;
         this.loaded = true;
 
+        this.on(ns.TRANSITIONEND + ".loaded", function (event) {
+
+            var $target = ns.$t(event.originalEvent.target);
+
+            if (event.originalEvent.propertyName === "visibility" && $target.is(ns.CLASS.selector("loader"))) {
+
+                $target.hide();
+
+                this.off(ns.TRANSITIONEND + ".loaded");
+            }
+        }.bind(this));
+
         this.$self.addClass(ns.CLASS.itemLoaded);
 
         return this;
@@ -908,6 +920,13 @@
     Item.prototype.scale = function (/*value, useCurrentTranslate, duration*/) {
 
         this.trfCtrl.scale.apply(this.trfCtrl, arguments);
+
+        return this;
+    };
+
+    Item.prototype.off = function (type) {
+
+        this.$self.off(type + "." + NS);
 
         return this;
     };
