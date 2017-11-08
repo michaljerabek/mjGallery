@@ -200,7 +200,7 @@
             this.pinch._prev = this.pinch.dist;
         }
 
-        this.moved = true;
+        this.moved = this.realMove();
 
         this.type = event.type.match(/mouse/) ? Pointer.TYPE.MOUSE : Pointer.TYPE.TOUCH;
     };

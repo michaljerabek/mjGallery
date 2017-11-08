@@ -3692,7 +3692,7 @@
             this.pinch._prev = this.pinch.dist;
         }
 
-        this.moved = true;
+        this.moved = this.realMove();
 
         this.type = event.type.match(/mouse/) ? Pointer.TYPE.MOUSE : Pointer.TYPE.TOUCH;
     };
@@ -4267,15 +4267,27 @@
         initToggleUI = function () {
 
             var wasTouchmove = false,
-                wasTouch = false;
+                wasTouch = false,
 
-            this.mjGallery.get().on(this.mjGallery.withNS("touchend." + NS, "touchmove." + NS), function (event) {
+                touchstartXY = {};
+
+            this.mjGallery.get().on(this.mjGallery.withNS("touchstart." + NS, "touchend." + NS, "touchmove." + NS), function (event) {
+
+                if (event.type.match(/start/)) {
+
+                    touchstartXY = {
+                        x: event.originalEvent.changedTouches[0].clientX,
+                        y: event.originalEvent.changedTouches[0].clientY
+                    };
+
+                    return;
+                }
 
                 mouseXY = { x: -1, y: -1 };
 
                 if (event.type.match(/move/)) {
 
-                    wasTouchmove = true;
+                    wasTouchmove = touchstartXY.x !== event.originalEvent.changedTouches[0].clientX || touchstartXY.y !== event.originalEvent.changedTouches[0].clientY;
 
                     return;
                 }
@@ -4432,7 +4444,7 @@
             //zavřít tapnutím na overlay (ve skutečnosti na item nebo view)
             //ovládání tlačítky
             //skrýt/zobrazit ui
-            this.mjGallery.get().off(this.mjGallery.withNS("click." + NS, "touchend." + NS, "touchmove." + NS, "mousemove." + NS, "mouseout." + NS));
+            this.mjGallery.get().off(this.mjGallery.withNS("click." + NS, "touchstart." + NS, "touchend." + NS, "touchmove." + NS, "mousemove." + NS, "mouseout." + NS));
         },
 
         toggleArrow = function (which, enable, init) {
