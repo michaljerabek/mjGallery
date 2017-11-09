@@ -642,7 +642,7 @@
 
             this.backFromEdge = false;
 
-            //odstranit události při dokončení zvětšování (jo to tady nutné?)
+            //odstranit události při dokončení zvětšování (je to tady nutné?)
             if (this.pointerCountOnStart > 1 && this.pointer.count < 2 && !this.itemDirFix) {
 
                 ns.$win.trigger(this.withNS("touchend"));
@@ -3690,9 +3690,13 @@
             };
 
             this.pinch._prev = this.pinch.dist;
-        }
 
-        this.moved = this.realMove();
+            this.moved = this.moved || this.realMove() || this.pinch.diff !== 0;
+
+        } else {
+
+            this.moved = this.moved || this.realMove();
+        }
 
         this.type = event.type.match(/mouse/) ? Pointer.TYPE.MOUSE : Pointer.TYPE.TOUCH;
     };

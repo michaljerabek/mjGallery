@@ -642,7 +642,7 @@
 
             this.backFromEdge = false;
 
-            //odstranit události při dokončení zvětšování (jo to tady nutné?)
+            //odstranit události při dokončení zvětšování (je to tady nutné?)
             if (this.pointerCountOnStart > 1 && this.pointer.count < 2 && !this.itemDirFix) {
 
                 ns.$win.trigger(this.withNS("touchend"));

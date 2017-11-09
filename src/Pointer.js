@@ -198,9 +198,13 @@
             };
 
             this.pinch._prev = this.pinch.dist;
-        }
 
-        this.moved = this.realMove();
+            this.moved = this.moved || this.realMove() || this.pinch.diff !== 0;
+
+        } else {
+
+            this.moved = this.moved || this.realMove();
+        }
 
         this.type = event.type.match(/mouse/) ? Pointer.TYPE.MOUSE : Pointer.TYPE.TOUCH;
     };
